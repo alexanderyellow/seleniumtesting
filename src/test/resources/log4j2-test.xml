@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration>
+
+    <Appenders>
+        <Appender type="Console" name="DefaultAppender">
+            <Layout type="PatternLayout" pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Appender>
+        <Appender type="File" name="TestAppender">
+            <Layout type="PatternLayout" pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Appender>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="DefaultLogger" level="debug" additivity="false">
+            <AppenderRef ref="DefaultAppender"/>
+        </Logger>
+
+        <Logger name="TestLogger" level="INFO" additivity="false">
+            <AppenderRef ref="TestAppender"/>
+        </Logger>
+
+        <!-- Root LoggerConfiguration -->
+        <Root level="all">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+
+</Configuration>

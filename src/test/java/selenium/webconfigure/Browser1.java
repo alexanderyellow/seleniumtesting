@@ -125,7 +125,7 @@ public class Browser1 {
                 quit();
                 initDriver();
             } catch (Throwable t) {
-                //Logger.get().debug("Failed to clean IE cookies: " + TestUtils.getThrowableFullDescription(t));
+                //LoggerConfiguration.get().debug("Failed to clean IE cookies: " + TestUtils.getThrowableFullDescription(t));
             }
         } else {
             getDriver().manage().deleteAllCookies();
@@ -137,7 +137,7 @@ public class Browser1 {
     }
 
     public void get(String url) {
-        //    Logger.get().componentInfo("Navigating to " + url);
+        //    LoggerConfiguration.get().componentInfo("Navigating to " + url);
         getDriver().navigate().to(url);
     }
 

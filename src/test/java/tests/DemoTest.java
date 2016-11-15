@@ -1,7 +1,5 @@
 package tests;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.testng.annotations.Test;
@@ -24,11 +22,11 @@ public class DemoTest {
         System.out.println("lalala: " + browserConfig.getBrowserName().toString());
 
         /* Get actual class name to be printed on */
-        /*Logger log = LogManager.getLogger("lala");
-        log.trace("Logger info");*/
+        /*LoggerConfiguration log = LogManager.getLogger("lala");
+        log.trace("LoggerConfiguration info");*/
 
-        Logger logger = LogManager.getRootLogger();
-        logger.trace("Configuration File Defined To Be :: " + System.getProperty("log4j.configurationFile"));
+        //Logger logger = LogManager.getRootLogger();
+        //logger.trace("LoggerConfiguration File Defined To Be :: " + System.getProperty("log4j.configurationFile"));
 
         /*DesiredCapabilities capabilities = DesiredCapabilities.chrome();
         capabilities.setJavascriptEnabled(true);
