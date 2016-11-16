@@ -1,5 +1,6 @@
 package tests;
 
+import junit.framework.Assert;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.testng.annotations.Test;
@@ -23,6 +24,9 @@ public class DemoTest {
         System.out.println("lalala: " + browserConfig.getBrowserName().toString());
 
         TestLogger testLogger = new TestLogger();
+
+
+        Assert.assertTrue(true);
     //    testLogger.getConsoleLogger().info("Lalala");
 
         /* Get actual class name to be printed on */

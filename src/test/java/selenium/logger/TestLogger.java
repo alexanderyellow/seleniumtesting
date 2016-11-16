@@ -40,6 +40,7 @@ public class TestLogger {
     private Logger fileLogger;
 
     public TestLogger() {
+        //Order is important
         final LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
         final Configuration configuration = loggerContext.getConfiguration();
         final PatternLayout layout = PatternLayout.createDefaultLayout(configuration);
@@ -49,33 +50,24 @@ public class TestLogger {
 
     //    fileAppender = new FileAppender("FileAppender", layout, null, null, "report.txt", false, false, null);
 
-        //TODO LoggerConfig name and Logger name must match
-
-        consoleLoggerConfig = new LoggerConfig("name", Level.INFO, false);
+        //LoggerConfig name and Logger name must match
+        consoleLoggerConfig = new LoggerConfig("name", Level.INFO, true);
         consoleLoggerConfig.addAppender(consoleAppender, null, null);
 
         configuration.addLogger("org.apache.logging.log4j.core", consoleLoggerConfig);
 
-        // Start logging system
-    //    loggerContext.stop();
-    //    loggerContext.reconfigure();
-    //    loggerContext.close();
-    //    loggerContext.start(configuration);
+        //First start context. After that reconfigure.
+        loggerContext.start(configuration);
+        loggerContext.reconfigure();
 
         // Get a reference for logger
         consoleLogger = loggerContext.getLogger("name");
 
-     //   configuration.addLoggerAppender(consoleLogger, consoleAppender);
-
-
         consoleLogger.info("Output");
 
-        consoleAppender.stop();
+        loggerContext.stop();
 
-        /*loggerContext.stop();
-        loggerContext.close();
-
-        consoleLoggerConfig.stop();*/
+    //    consoleAppender.stop();
     }
 
     /*public LoggerContext getLoggerContext() {

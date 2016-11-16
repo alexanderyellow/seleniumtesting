@@ -3,9 +3,9 @@
 <Configuration>
 
     <Appenders>
-        <Console name="DefaultAppender">
+        <File name="DefaultAppender" fileName="output.txt">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-        </Console>
+        </File>
     </Appenders>
 
     <Loggers>
