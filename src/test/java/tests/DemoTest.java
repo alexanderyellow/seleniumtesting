@@ -3,6 +3,7 @@ package tests;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.testng.annotations.Test;
+import selenium.logger.TestLogger;
 import selenium.webconfigure.BrowserConfig;
 import selenium.webconfigure.context.ContextConfiguration;
 
@@ -20,6 +21,9 @@ public class DemoTest {
         BrowserConfig browserConfig = (BrowserConfig) context.getBean("browserConfig");
 
         System.out.println("lalala: " + browserConfig.getBrowserName().toString());
+
+        TestLogger testLogger = new TestLogger();
+    //    testLogger.getConsoleLogger().info("Lalala");
 
         /* Get actual class name to be printed on */
         /*LoggerConfiguration log = LogManager.getLogger("lala");

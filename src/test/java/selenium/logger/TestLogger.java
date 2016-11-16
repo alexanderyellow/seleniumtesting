@@ -1,12 +1,14 @@
 package selenium.logger;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.appender.ConsoleAppender;
 import org.apache.logging.log4j.core.appender.FileAppender;
+import org.apache.logging.log4j.core.appender.FileManager;
 import org.apache.logging.log4j.core.config.*;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 
@@ -15,12 +17,22 @@ import org.apache.logging.log4j.core.layout.PatternLayout;
  */
 public class TestLogger {
 
+    //TODO check appenders existing and create default appenders
+    private enum LogAppenders {
+        CONSOLE("DefaultAppender"),
+        FILE("TestAppender");
+
+        private String value;
+
+        LogAppenders(String value) {
+            this.value = value;
+        }
+    }
+
     private static final String LOG_CONFIG_FILE = "src/test/resources/log4j2-test.xml";
-    private ConfigurationFactory factory;
-    private ConfigurationSource configurationSource;
-    private LoggerContext loggerContext;
-    private Configuration configuration;
-    private ConsoleAppender consoleAppender;
+    /*private LoggerContext loggerContext;
+    private Configuration configuration;*/
+  //  private ConsoleAppender consoleAppender;
     private FileAppender fileAppender;
     private LoggerConfig consoleLoggerConfig;
     private LoggerConfig fileLoggerConfig;
@@ -28,66 +40,55 @@ public class TestLogger {
     private Logger fileLogger;
 
     public TestLogger() {
-        /*factory = XmlConfigurationFactory.getInstance();
+        final LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
+        final Configuration configuration = loggerContext.getConfiguration();
+        final PatternLayout layout = PatternLayout.createDefaultLayout(configuration);
+        final ConsoleAppender consoleAppender = ConsoleAppender.createDefaultAppenderForLayout(layout);
+        consoleAppender.start();
+        configuration.addAppender(consoleAppender);
 
-        try {
-            configurationSource = new ConfigurationSource(new FileInputStream(new File(LOG_CONFIG_FILE)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    //    fileAppender = new FileAppender("FileAppender", layout, null, null, "report.txt", false, false, null);
+
+        //TODO LoggerConfig name and Logger name must match
+
+        consoleLoggerConfig = new LoggerConfig("name", Level.INFO, false);
+        consoleLoggerConfig.addAppender(consoleAppender, null, null);
+
+        configuration.addLogger("org.apache.logging.log4j.core", consoleLoggerConfig);
+
+        // Start logging system
+    //    loggerContext.stop();
+    //    loggerContext.reconfigure();
+    //    loggerContext.close();
+    //    loggerContext.start(configuration);
+
+        // Get a reference for logger
+        consoleLogger = loggerContext.getLogger("name");
+
+     //   configuration.addLoggerAppender(consoleLogger, consoleAppender);
 
 
-        loggerContext = (LoggerContext) LogManager.getContext(false);//new LoggerContext("DefaultLogger");
+        consoleLogger.info("Output");
 
-        configuration = factory.getConfiguration(loggerContext, configurationSource);*/
+        consoleAppender.stop();
 
-        final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-        final Configuration config = ctx.getConfiguration();
+        /*loggerContext.stop();
+        loggerContext.close();
 
-        final Layout layout = PatternLayout.createLayout(PatternLayout.SIMPLE_CONVERSION_PATTERN, null, config, null,
-                null, true, true, null, null);
-
-        Appender appender = ConsoleAppender.createDefaultAppenderForLayout(layout);/*createAppender("target/test.log", "false", "false", "File", "true",
-                "false", "false", "4000", layout, null, "false", null, config);*/
-        appender.start();
-
-        config.addAppender(appender);
-
-        AppenderRef ref = AppenderRef.createAppenderRef("Console", null, null);
-        AppenderRef[] refs = new AppenderRef[]{ref};
-
-        LoggerConfig loggerConfig = LoggerConfig.createLogger("false", "info", "org.apache.logging.log4j",
-                "true", refs, null, config, null);
-
-        loggerConfig.addAppender(appender, null, null);
-        config.addLogger("org.apache.logging.log4j", loggerConfig);
-        //    consoleAppender = (ConsoleAppender) configuration.getAppenders().get(LogAppenders.CONSOLE.value);
-        //    fileAppender = (FileAppender)  configuration.getAppenders().get(LogAppenders.FILE.value);
-
-        //  consoleLoggerConfig = configuration.getLoggerConfig("DefaultLogger");
-        //  fileLoggerConfig = configuration.getLoggerConfig("TestLogger");
-
-        /*PatternLayout layout= PatternLayout.createLayout("%m%n", null, null, Charset.defaultCharset(),false,false,null,null);
-        Appender appender = ConsoleAppender.createAppender(layout, null, null, "CONSOLE_APPENDER", null, null);
-        appender.start();
-
-        appender = ConsoleAppender.createDefaultAppenderForLayout(PatternLayout.createDefaultLayout());
-        consoleLoggerConfig = new LoggerConfig("com", Level.FATAL,false);
-        consoleLoggerConfig.addAppender(appender,null,null);
-        configuration.addLogger("com", loggerConfig);*/
+        consoleLoggerConfig.stop();*/
     }
 
-    public LoggerContext getLoggerContext() {
+    /*public LoggerContext getLoggerContext() {
         return loggerContext;
     }
 
     public Configuration getConfiguration() {
         return configuration;
-    }
+    }*/
 
-    public ConsoleAppender getConsoleAppender() {
+  /*  public ConsoleAppender getConsoleAppender() {
         return consoleAppender;
-    }
+    }*/
 
     public FileAppender getFileAppender() {
         return fileAppender;
@@ -107,18 +108,6 @@ public class TestLogger {
 
     public Logger getFileLogger() {
         return fileLogger;
-    }
-
-    //TODO check appenders existing and create default appenders
-    private enum LogAppenders {
-        CONSOLE("DefaultAppender"),
-        FILE("TestAppender");
-
-        private String value;
-
-        LogAppenders(String value) {
-            this.value = value;
-        }
     }
 
     /**
