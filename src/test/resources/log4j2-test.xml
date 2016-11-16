@@ -3,15 +3,21 @@
 <Configuration>
 
     <Appenders>
-        <File name="DefaultAppender" fileName="output.txt">
+        <File name="FileAppender" fileName="output.txt">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </File>
+        <Console name="ConsoleAppender">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
     </Appenders>
 
     <Loggers>
         <Root level="info">
-            <AppenderRef ref="DefaultAppender"/>
+            <AppenderRef ref="FileAppender"/>
         </Root>
+        <!--<logger name="name" level="info">
+            <AppenderRef ref="ConsoleAppender"/>
+        </logger>-->
     </Loggers>
 
 </Configuration>

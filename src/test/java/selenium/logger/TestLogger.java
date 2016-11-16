@@ -2,7 +2,7 @@ package selenium.logger;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -41,7 +41,7 @@ public class TestLogger {
 
     public TestLogger() {
         //Order is important
-        final LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
+        final LoggerContext loggerContext = (LoggerContext) LogManager.getContext(true);
         final Configuration configuration = loggerContext.getConfiguration();
         final PatternLayout layout = PatternLayout.createDefaultLayout(configuration);
         final ConsoleAppender consoleAppender = ConsoleAppender.createDefaultAppenderForLayout(layout);
@@ -51,23 +51,18 @@ public class TestLogger {
     //    fileAppender = new FileAppender("FileAppender", layout, null, null, "report.txt", false, false, null);
 
         //LoggerConfig name and Logger name must match
-        consoleLoggerConfig = new LoggerConfig("name", Level.INFO, true);
+        consoleLoggerConfig = new LoggerConfig("name", Level.INFO, false);
         consoleLoggerConfig.addAppender(consoleAppender, null, null);
 
-        configuration.addLogger("org.apache.logging.log4j.core", consoleLoggerConfig);
+    //    consoleLoggerConfig.start();
 
-        //First start context. After that reconfigure.
-        loggerContext.start(configuration);
-        loggerContext.reconfigure();
+        configuration.addLogger("name", consoleLoggerConfig);
+        loggerContext.updateLoggers();
 
         // Get a reference for logger
         consoleLogger = loggerContext.getLogger("name");
 
         consoleLogger.info("Output");
-
-        loggerContext.stop();
-
-    //    consoleAppender.stop();
     }
 
     /*public LoggerContext getLoggerContext() {
