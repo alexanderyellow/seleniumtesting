@@ -14,7 +14,7 @@ import selenium.webconfigure.Browser.BrowserName;
 /**
  * Created by alexander.
  * <p>
- * Read context properties from config file and set BrowserConfig
+ * Read context properties from config file and set ExecutionContext
  */
 @Configuration
 @PropertySource("file:src/test/resources/browserconfig.properties")
