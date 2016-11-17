@@ -8,7 +8,7 @@ import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.ScreenshotException;
-import selenium.webconfigure.BrowserConfig.BrowserName;
+import selenium.webconfigure.ExecutionContext.BrowserName;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,9 +18,29 @@ import java.util.UUID;
 /**
  * Configure working with the Browser.
  * <p>
- * Created by alexander on 20.09.16.
+ * Created by alexander.
  */
 public class Browser {
+
+    public enum BrowserName {
+        CHROME("CHROME"),
+        IE("IE"),
+        FF("FF");
+
+        private final String browserName;
+
+        BrowserName(String value) {
+            browserName = value;
+        }
+
+        public static BrowserName fromString(String value) {
+            return valueOf(value.toUpperCase());
+        }
+
+        public String toString() {
+            return browserName;
+        }
+    }
 
     private final static List<WebDriver> drivers = new ArrayList<WebDriver>();
 
@@ -43,26 +63,30 @@ public class Browser {
     }
 
     private final String id;
-    private BrowserConfig browserConfig;
+    private ExecutionContext executionContext;
 
-    public Browser(BrowserConfig browserConfig) {
-        this.browserConfig = browserConfig;
+    public Browser(ExecutionContext executionContext) {
+        this.executionContext = executionContext;
         this.id = UUID.randomUUID() + "";
         initDriver();
     }
 
+    /**
+     * Initialize driver.
+     * @return driver
+     */
     private synchronized Browser initDriver() {
 
-        switch (browserConfig.getBrowserName()) {
+        switch (executionContext.getBrowserName()) {
             case CHROME:
                 //System.setProperty("webdriver.chrome.driver", "src/test/resources/drivers/chromedriver");
                 DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-                capabilities.setJavascriptEnabled(browserConfig.getJavascriptEnabled());
-                capabilities.setPlatform(browserConfig.getPlatform());
-                capabilities.setBrowserName(browserConfig.getBrowserName().toString());
+                capabilities.setJavascriptEnabled(executionContext.getJavascriptEnabled());
+                capabilities.setPlatform(executionContext.getPlatform());
+                capabilities.setBrowserName(executionContext.getBrowserName().toString());
 
                 driver = new ChromeDriver(new ChromeDriverService.Builder()
-                        .usingDriverExecutable(new File(browserConfig.getWebDriver()))
+                        .usingDriverExecutable(new File(executionContext.getWebDriver()))
                         .usingAnyFreePort()
                         .build(), capabilities);
 
@@ -91,10 +115,19 @@ public class Browser {
         driver.manage().deleteAllCookies();
     }
 
+    /**
+     * Navigate to url
+     * @param url navigation url
+     */
     public void get(String url) {
         driver.navigate().to(url);
     }
 
+    /**
+     * Check using browser.
+     * @param browserName browser name
+     * @return result
+     */
     public boolean isExpectedBrowser(BrowserName browserName) {
         String currentBrowserName = ((RemoteWebDriver) getWebDriver()).getCapabilities().getBrowserName();
         String expectedBrowser = browserName.toString();
@@ -102,9 +135,13 @@ public class Browser {
         return (expectedBrowser.equalsIgnoreCase(currentBrowserName));
     }
 
+    /**
+     * Maximize window
+     */
     public void maximize() {
         driver.manage().window().maximize();
     }
+
 
     public void reopenIfDead() {
         try {
@@ -139,6 +176,9 @@ public class Browser {
         }
     }
 
+    /**
+     * Quite driver
+     */
     public void quit() {
         try {
             driver.quit();

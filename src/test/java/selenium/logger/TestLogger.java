@@ -30,72 +30,49 @@ public class TestLogger {
     }
 
     private static final String LOG_CONFIG_FILE = "src/test/resources/log4j2-test.xml";
-    /*private LoggerContext loggerContext;
-    private Configuration configuration;*/
-  //  private ConsoleAppender consoleAppender;
+    private LoggerContext loggerContext;
+    private Configuration configuration;
+    private PatternLayout patternLayout;
+    private ConsoleAppender consoleAppender;
     private FileAppender fileAppender;
     private LoggerConfig consoleLoggerConfig;
     private LoggerConfig fileLoggerConfig;
     private Logger consoleLogger;
     private Logger fileLogger;
 
-    public TestLogger() {
+    public TestLogger(String loggerName) {
+        init(loggerName);
+
+        // Get a reference for logger
+        consoleLogger = loggerContext.getLogger(loggerName);
+
+    //    consoleLogger.info("Output");
+    }
+
+    /**
+     * Initialize logger
+     * @param loggerName LoggerConfig name & Logger name
+     */
+    private void init(String loggerName) {
         //Order is important
-        final LoggerContext loggerContext = (LoggerContext) LogManager.getContext(true);
-        final Configuration configuration = loggerContext.getConfiguration();
-        final PatternLayout layout = PatternLayout.createDefaultLayout(configuration);
-        final ConsoleAppender consoleAppender = ConsoleAppender.createDefaultAppenderForLayout(layout);
+        loggerContext = (LoggerContext) LogManager.getContext(true);
+        configuration = loggerContext.getConfiguration();
+        patternLayout = PatternLayout.createDefaultLayout(configuration);
+        consoleAppender = ConsoleAppender.createDefaultAppenderForLayout(patternLayout);
         consoleAppender.start();
         configuration.addAppender(consoleAppender);
 
-    //    fileAppender = new FileAppender("FileAppender", layout, null, null, "report.txt", false, false, null);
+        //    fileAppender = new FileAppender("FileAppender", layout, null, null, "report.txt", false, false, null);
 
         //LoggerConfig name and Logger name must match
-        consoleLoggerConfig = new LoggerConfig("name", Level.INFO, false);
+        consoleLoggerConfig = new LoggerConfig(loggerName, Level.INFO, false);
         consoleLoggerConfig.addAppender(consoleAppender, null, null);
 
-    //    consoleLoggerConfig.start();
-
-        configuration.addLogger("name", consoleLoggerConfig);
+        configuration.addLogger(loggerName, consoleLoggerConfig);
         loggerContext.updateLoggers();
-
-        // Get a reference for logger
-        consoleLogger = loggerContext.getLogger("name");
-
-        consoleLogger.info("Output");
     }
 
-    /*public LoggerContext getLoggerContext() {
-        return loggerContext;
-    }
 
-    public Configuration getConfiguration() {
-        return configuration;
-    }*/
-
-  /*  public ConsoleAppender getConsoleAppender() {
-        return consoleAppender;
-    }*/
-
-    public FileAppender getFileAppender() {
-        return fileAppender;
-    }
-
-    public LoggerConfig getConsoleLoggerConfig() {
-        return consoleLoggerConfig;
-    }
-
-    public LoggerConfig getFileLoggerConfig() {
-        return fileLoggerConfig;
-    }
-
-    public Logger getConsoleLogger() {
-        return consoleLogger;
-    }
-
-    public Logger getFileLogger() {
-        return fileLogger;
-    }
 
     /**
      * Processes screen shot info. Creates screen shot file in log folder

@@ -5,7 +5,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.testng.annotations.Test;
 import selenium.logger.TestLogger;
-import selenium.webconfigure.BrowserConfig;
+import selenium.webconfigure.ExecutionContext;
 import selenium.webconfigure.context.ContextConfiguration;
 
 /**
@@ -19,11 +19,11 @@ public class DemoTest {
 
         ApplicationContext context = new AnnotationConfigApplicationContext(ContextConfiguration.class);
 
-        BrowserConfig browserConfig = (BrowserConfig) context.getBean("browserConfig");
+        ExecutionContext executionContext = (ExecutionContext) context.getBean("browserConfig");
 
-        System.out.println("lalala: " + browserConfig.getBrowserName().toString());
+        System.out.println("lalala: " + executionContext.getBrowserName().toString());
 
-        TestLogger testLogger = new TestLogger();
+        TestLogger testLogger = new TestLogger("name");
 
 
         Assert.assertTrue(true);

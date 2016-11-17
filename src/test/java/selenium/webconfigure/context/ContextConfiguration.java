@@ -8,11 +8,11 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
-import selenium.webconfigure.BrowserConfig;
-import selenium.webconfigure.BrowserConfig.BrowserName;
+import selenium.webconfigure.ExecutionContext;
+import selenium.webconfigure.Browser.BrowserName;
 
 /**
- * Created by alexander on 08.10.16.
+ * Created by alexander.
  * <p>
  * Read context properties from config file and set BrowserConfig
  */
@@ -35,20 +35,20 @@ public class ContextConfiguration {
 
     @Bean
     @Scope("prototype")
-    public BrowserConfig browserConfig() {
-        BrowserConfig browserConfig = new BrowserConfig();
+    public ExecutionContext browserConfig() {
+        ExecutionContext executionContext = new ExecutionContext();
 
         BrowserName browserName = BrowserName.fromString(env.getProperty(BROWSER_NAME));
         String webdriver = env.getProperty(WEBDRIVER);
         Platform platform = Platform.fromString(env.getProperty(PLATFORM));
         boolean javascriptEnabled = Boolean.valueOf(env.getProperty(JAVASCRIPT_ENABLED));
 
-        browserConfig.setBrowserName(browserName);
-        browserConfig.setWebDriver(webdriver);
-        browserConfig.setPlatform(platform);
-        browserConfig.setJavascriptEnabled(javascriptEnabled);
+        executionContext.setBrowserName(browserName);
+        executionContext.setWebDriver(webdriver);
+        executionContext.setPlatform(platform);
+        executionContext.setJavascriptEnabled(javascriptEnabled);
 
-        return browserConfig;
+        return executionContext;
     }
 
 }
