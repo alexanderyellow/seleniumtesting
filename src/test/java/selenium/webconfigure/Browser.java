@@ -76,11 +76,12 @@ public class Browser {
      * @return driver
      */
     private synchronized void initDriver() {
+        DesiredCapabilities capabilities;
 
         switch (browserConfig.getBrowser()) {
             case CHROME:
             //    System.setProperty("webdriver.chrome.driver", "src/test/resources/drivers/chromedriver");
-                DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+                capabilities = DesiredCapabilities.chrome();
                 capabilities.setJavascriptEnabled(browserConfig.getJavascriptEnabled());
                 capabilities.setPlatform(browserConfig.getPlatform());
                 capabilities.setBrowserName(browserConfig.getBrowser().toString());
@@ -98,12 +99,13 @@ public class Browser {
                 System.out.println("IE");
                 break;
             case FF:
-                File file = new File("firebug-1.8.1.xpi");
-                FirefoxProfile firefoxProfile = new FirefoxProfile();
-                firefoxProfile.addExtension(file);
-                firefoxProfile.setPreference("extensions.firebug.currentVersion", "1.8.1"); // Avoid startup screen
+                System.setProperty("webdriver.firefox.marionette","D:\\Selenium\\Firefox driver\\geckodriver.exe");
+                capabilities = DesiredCapabilities.firefox();
+                capabilities.setJavascriptEnabled(browserConfig.getJavascriptEnabled());
+                capabilities.setPlatform(browserConfig.getPlatform());
+                capabilities.setBrowserName(browserConfig.getBrowser().toString());
 
-                driver = new FirefoxDriver(firefoxProfile);
+                driver = new FirefoxDriver(capabilities);
                 System.out.println("FF");
                 break;
             default:
