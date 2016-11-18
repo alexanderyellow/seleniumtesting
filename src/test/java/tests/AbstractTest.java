@@ -10,6 +10,7 @@ import org.testng.annotations.BeforeSuite;
 import selenium.webconfigure.Browser;
 import selenium.webconfigure.context.ExecutionContext;
 import selenium.webconfigure.context.ContextConfiguration;
+import selenium.webconfigure.context.ExecutionContextManager;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -24,11 +25,9 @@ public class AbstractTest {
      * Test browser
      */
     public ThreadLocal<Browser> browser = new ThreadLocal<Browser>();
-    private ApplicationContext context;
 
     @BeforeSuite
     public void beforeSuite(ITestContext iTestContext) {
-        context = new AnnotationConfigApplicationContext(ContextConfiguration.class);
 
 
 
@@ -61,8 +60,8 @@ public class AbstractTest {
     @BeforeMethod
     public void beforeMethod(Method method) {
     //    initLogger(method);
-        ExecutionContext executionContext = (ExecutionContext) context.getBean("browserConfig", method);
-        browser.set(executionContext.getBrowser());
+        ExecutionContextManager.createContext(method);
+        browser.set(ExecutionContextManager.getContext().getBrowser());
         browser.get().maximize();
     }
 

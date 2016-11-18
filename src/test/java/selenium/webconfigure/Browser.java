@@ -5,6 +5,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.ScreenshotException;
@@ -77,16 +79,18 @@ public class Browser {
 
         switch (browserConfig.getBrowser()) {
             case CHROME:
-                //System.setProperty("webdriver.chrome.driver", "src/test/resources/drivers/chromedriver");
+            //    System.setProperty("webdriver.chrome.driver", "src/test/resources/drivers/chromedriver");
                 DesiredCapabilities capabilities = DesiredCapabilities.chrome();
                 capabilities.setJavascriptEnabled(browserConfig.getJavascriptEnabled());
                 capabilities.setPlatform(browserConfig.getPlatform());
-                capabilities.setBrowserName(browserConfig.toString());
+                capabilities.setBrowserName(browserConfig.getBrowser().toString());
 
                 driver = new ChromeDriver(new ChromeDriverService.Builder()
                         .usingDriverExecutable(new File(browserConfig.getWebDriver()))
                         .usingAnyFreePort()
                         .build(), capabilities);
+
+                System.out.println("initBrowser: " + driver);
 
                 System.out.println("Chrome");
                 break;
@@ -94,6 +98,12 @@ public class Browser {
                 System.out.println("IE");
                 break;
             case FF:
+                File file = new File("firebug-1.8.1.xpi");
+                FirefoxProfile firefoxProfile = new FirefoxProfile();
+                firefoxProfile.addExtension(file);
+                firefoxProfile.setPreference("extensions.firebug.currentVersion", "1.8.1"); // Avoid startup screen
+
+                driver = new FirefoxDriver(firefoxProfile);
                 System.out.println("FF");
                 break;
             default:

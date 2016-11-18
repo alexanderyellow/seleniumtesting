@@ -1,7 +1,11 @@
 package selenium.webconfigure.context;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import selenium.pages.AbstractPage;
 import selenium.webconfigure.Browser;
+import selenium.webconfigure.Browser.BrowserName;
+import selenium.webconfigure.BrowserConfig;
 
 import java.lang.reflect.Method;
 import java.util.UUID;
@@ -11,6 +15,7 @@ import java.util.UUID;
  * <p>
  * Configure browser
  */
+@Component
 public class ExecutionContext {
 
     private Browser browser;
@@ -99,7 +104,7 @@ public class ExecutionContext {
      * @return String info about context
      */
     public String toString() {
-        return "UUID: " + uuid + ", current user: " + ", current page: " + currentPage + "," +
+        return "UUID: " + uuid + ", current page: " + currentPage + "," +
                 " thread: " + (thread == null ? "null" : thread.getId() + ", method: " + method);
     }
 
