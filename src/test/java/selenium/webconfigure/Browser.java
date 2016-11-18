@@ -99,7 +99,7 @@ public class Browser {
                 System.out.println("IE");
                 break;
             case FF:
-                System.setProperty("webdriver.firefox.marionette","D:\\Selenium\\Firefox driver\\geckodriver.exe");
+                System.setProperty("webdriver.firefox.marionette","D:\\TestProject\\seleniumtesting\\src\\test\\resources\\drivers");
                 capabilities = DesiredCapabilities.firefox();
                 capabilities.setJavascriptEnabled(browserConfig.getJavascriptEnabled());
                 capabilities.setPlatform(browserConfig.getPlatform());
