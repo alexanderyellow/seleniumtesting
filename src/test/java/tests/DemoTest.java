@@ -4,8 +4,7 @@ import junit.framework.Assert;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.testng.annotations.Test;
-import selenium.logger.TestLogger;
-import selenium.webconfigure.ExecutionContext;
+import selenium.webconfigure.context.ExecutionContext;
 import selenium.webconfigure.context.ContextConfiguration;
 
 /**
@@ -18,12 +17,13 @@ public class DemoTest {
         //System.setProperty("webdriver.chrome.driver", "src/test/resources/drivers/chromedriver");
 
         ApplicationContext context = new AnnotationConfigApplicationContext(ContextConfiguration.class);
+        ExecutionContext executionContext = (ExecutionContext) context.getBean("browserConfig", this.getClass().getMethods()[0]);
 
-        ExecutionContext executionContext = (ExecutionContext) context.getBean("browserConfig");
 
-        System.out.println("lalala: " + executionContext.getBrowserName().toString());
 
-        TestLogger testLogger = new TestLogger("name");
+    //    System.out.println("lalala: " + executionContext.getBrowserName().toString());
+
+    //    TestLogger testLogger = new TestLogger("name");
 
 
         Assert.assertTrue(true);

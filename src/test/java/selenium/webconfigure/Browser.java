@@ -21,7 +21,28 @@ import java.util.UUID;
  */
 public class Browser {
 
+    public enum BrowserName {
+        CHROME("CHROME"),
+        IE("IE"),
+        FF("FF");
+
+        private final String browserName;
+
+        BrowserName(String value) {
+            browserName = value;
+        }
+
+        public static BrowserName fromString(String value) {
+            return valueOf(value.toUpperCase());
+        }
+
+        public String toString() {
+            return browserName;
+        }
+    }
+
     private final static List<WebDriver> drivers = new ArrayList<WebDriver>();
+    private BrowserConfig browserConfig;
     private static RemoteWebDriver driver;
 
     static {
@@ -44,25 +65,26 @@ public class Browser {
 
     public Browser(BrowserConfig browserConfig) {
         this.id = UUID.randomUUID() + "";
-        initDriver(browserConfig);
+        this.browserConfig = browserConfig;
+        initDriver();
     }
 
     /**
      * Initialize driver.
      * @return driver
      */
-    private synchronized void initDriver(BrowserConfig browserConfig) {
+    private synchronized void initDriver() {
 
-        switch (browserName) {
+        switch (browserConfig.getBrowser()) {
             case CHROME:
                 //System.setProperty("webdriver.chrome.driver", "src/test/resources/drivers/chromedriver");
                 DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-                capabilities.setJavascriptEnabled(executionContext.getJavascriptEnabled());
-                capabilities.setPlatform(executionContext.getPlatform());
-                capabilities.setBrowserName(browserName.toString());
+                capabilities.setJavascriptEnabled(browserConfig.getJavascriptEnabled());
+                capabilities.setPlatform(browserConfig.getPlatform());
+                capabilities.setBrowserName(browserConfig.toString());
 
                 driver = new ChromeDriver(new ChromeDriverService.Builder()
-                        .usingDriverExecutable(new File(executionContext.getWebDriver()))
+                        .usingDriverExecutable(new File(browserConfig.getWebDriver()))
                         .usingAnyFreePort()
                         .build(), capabilities);
 
@@ -172,25 +194,5 @@ public class Browser {
         }
 
         return super.equals(o);
-    }
-
-    public enum BrowserName {
-        CHROME("CHROME"),
-        IE("IE"),
-        FF("FF");
-
-        private final String browserName;
-
-        BrowserName(String value) {
-            browserName = value;
-        }
-
-        public static BrowserName fromString(String value) {
-            return valueOf(value.toUpperCase());
-        }
-
-        public String toString() {
-            return browserName;
-        }
     }
 }

@@ -8,7 +8,7 @@ import org.testng.ITestResult;
 /**
  * Created by alexander.
  */
-public class DefaultListener implements ITestListener, IConfigurationListener {
+public class DefaultListener {//implements ITestListener, IConfigurationListener {
 
     private final static DefaultListener _instance = new DefaultListener();
     private Throwable lastKnownThrowable = null;
@@ -30,7 +30,7 @@ public class DefaultListener implements ITestListener, IConfigurationListener {
      * @param iTestResult iTestResult in TestNG
      * @see org.testng.ITestListener
      */
-    public void onTestSuccess(ITestResult iTestResult) {
+    /*public void onTestSuccess(ITestResult iTestResult) {
         if (Logger.getLogger().hasTestSession()) {
             if (!Logger.get().hasFails()) {
                 ExecutionContext executionContext = ExecutionContextManager.getContext(iTestResult.getMethod()
@@ -41,12 +41,12 @@ public class DefaultListener implements ITestListener, IConfigurationListener {
         }
     }
 
-    /**
+    *//**
      * Places message about critical error in Logger with page screenshot
      *
      * @param iTestResult iTestResult in TestNG
      * @see org.testng.ITestListener
-     */
+     *//*
     public void onTestFailure(ITestResult iTestResult) {
         if (iTestResult.getMethod().isTest()) {
             ExecutionContext executionContext = null;
@@ -99,12 +99,12 @@ public class DefaultListener implements ITestListener, IConfigurationListener {
 
     }
 
-    /**
+    *//**
      * Places message about testISF34 skipped in Logger
      *
      * @param iTestResult iTestResult in TestNG
      * @see org.testng.ITestListener
-     */
+     *//*
     public void onTestSkipped(ITestResult iTestResult) {
 
         Thread testThread;
@@ -139,12 +139,12 @@ public class DefaultListener implements ITestListener, IConfigurationListener {
 
     }
 
-    /**
+    *//**
      * Places message about errors in Logger with page screenshot
      *
      * @param iTestResult iTestResult in TestNG
      * @see org.testng.ITestListener
-     */
+     *//*
     public void onTestFailedButWithinSuccessPercentage(ITestResult iTestResult) {
         if (Logger.getLogger().hasTestSession()) {
             printTrace();
@@ -184,6 +184,6 @@ public class DefaultListener implements ITestListener, IConfigurationListener {
         } catch (Throwable t) {
             //    Logger.get().debug("LISTENER INVOKED:\n" + TestUtils.getThrowableFullDescription(t));
         }
-    }
+    }*/
 
 }
