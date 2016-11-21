@@ -1,8 +1,5 @@
 package selenium.logger;
 
-import org.testng.IConfigurationListener;
-import org.testng.ITestContext;
-import org.testng.ITestListener;
 import org.testng.ITestResult;
 
 /**
@@ -33,15 +30,15 @@ public class DefaultListener {//implements ITestListener, IConfigurationListener
     /*public void onTestSuccess(ITestResult iTestResult) {
         if (Logger.getLogger().hasTestSession()) {
             if (!Logger.get().hasFails()) {
-                ExecutionContext executionContext = ExecutionContextManager.getContext(iTestResult.getMethod()
+                ExecutionContext executionContext = ExecutionContextManager.getOrCreateContext(iTestResult.getMethod()
                         .getConstructorOrMethod().getMethod());
-                Browser browser = executionContext == null ? null : executionContext.getBrowser();
+                Browser browser = executionContext == null ? null : executionContext.getBrowserName();
                 Logger.get().success("Test PASS", browser == null ? null : browser.getScreenShot());
             }
         }
-    }
+    }*/
 
-    *//**
+    /**
      * Places message about critical error in Logger with page screenshot
      *
      * @param iTestResult iTestResult in TestNG
@@ -52,11 +49,11 @@ public class DefaultListener {//implements ITestListener, IConfigurationListener
             ExecutionContext executionContext = null;
             if (ExecutionContextManager.hasContext(iTestResult.getMethod()
                     .getConstructorOrMethod().getMethod())) {
-                executionContext = ExecutionContextManager.getContext(iTestResult.getMethod()
+                executionContext = ExecutionContextManager.getOrCreateContext(iTestResult.getMethod()
                         .getConstructorOrMethod().getMethod());
             }
 
-            Browser browser = executionContext == null ? null : executionContext.getBrowser();
+            Browser browser = executionContext == null ? null : executionContext.getBrowserName();
 
             if (Logger.getLogger().hasTestSession()) {
                 printTrace();
@@ -112,7 +109,7 @@ public class DefaultListener {//implements ITestListener, IConfigurationListener
         ExecutionContext executionContext = null;
         if (ExecutionContextManager.hasContext(iTestResult.getMethod()
                 .getConstructorOrMethod().getMethod())) {
-            executionContext = ExecutionContextManager.getContext(iTestResult.getMethod()
+            executionContext = ExecutionContextManager.getOrCreateContext(iTestResult.getMethod()
                     .getConstructorOrMethod().getMethod());
         }
 
@@ -151,10 +148,10 @@ public class DefaultListener {//implements ITestListener, IConfigurationListener
             ExecutionContext executionContext = null;
             if (ExecutionContextManager.hasContext(iTestResult.getMethod()
                     .getConstructorOrMethod().getMethod())) {
-                executionContext = ExecutionContextManager.getContext(iTestResult.getMethod()
+                executionContext = ExecutionContextManager.getOrCreateContext(iTestResult.getMethod()
                         .getConstructorOrMethod().getMethod());
             }
-            Browser browser = executionContext == null ? null : executionContext.getBrowser();
+            Browser browser = executionContext == null ? null : executionContext.getBrowserName();
             Logger.get().fail("There is critical error in test:\n" +
                             TestUtils.getThrowableFullDescription(iTestResult.getThrowable()),
                     (browser != null ? browser.getScreenShot() : null));

@@ -1,13 +1,7 @@
 package tests;
 
 import junit.framework.Assert;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.testng.annotations.Test;
-import selenium.webconfigure.Browser;
-import selenium.webconfigure.BrowserConfig;
-import selenium.webconfigure.context.ExecutionContext;
-import selenium.webconfigure.context.ContextConfiguration;
 
 /**
  * Created by alexander on 03.09.16.

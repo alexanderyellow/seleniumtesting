@@ -3,76 +3,240 @@ package selenium.logger;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.Appender;
-import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.appender.ConsoleAppender;
-import org.apache.logging.log4j.core.appender.FileAppender;
-import org.apache.logging.log4j.core.appender.FileManager;
-import org.apache.logging.log4j.core.config.*;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.layout.PatternLayout;
+import org.bouncycastle.util.encoders.Base64Encoder;
+import org.openqa.selenium.WebDriverException;
+import selenium.common.TestDescription;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
- * Created by alexander on 13.11.16.
+ * TestLogger
  */
 public class TestLogger {
 
-    //TODO check appenders existing and create default appenders
-    private enum LogAppenders {
-        CONSOLE("DefaultAppender"),
-        FILE("TestAppender");
-
-        private String value;
-
-        LogAppenders(String value) {
-            this.value = value;
-        }
-    }
-
-    private static final String LOG_CONFIG_FILE = "src/test/resources/log4j2-test.xml";
-    private LoggerContext loggerContext;
-    private Configuration configuration;
-    private PatternLayout patternLayout;
-    private ConsoleAppender consoleAppender;
-    private FileAppender fileAppender;
-    private LoggerConfig consoleLoggerConfig;
-    private LoggerConfig fileLoggerConfig;
-    private Logger consoleLogger;
-    private Logger fileLogger;
-
-    public TestLogger(String loggerName) {
-        init(loggerName);
-
-        // Get a reference for logger
-        consoleLogger = loggerContext.getLogger(loggerName);
-
-    //    consoleLogger.info("Output");
-    }
+    /**
+     * Folder where extended logs should be placed
+     */
+    private final String LOGS_FOLDER = "target/selenium-logs/";
+    private final String TEST_LOGS_FOLDER = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date()) + "/";
 
     /**
-     * Initialize logger
-     * @param loggerName LoggerConfig name & Logger name
+     * Substring of screenshot in message
      */
-    private void init(String loggerName) {
+    private final String SCREEN_SHOT_ID = "[screenshot:";
+
+    /**
+     * Path to folder with screenshot images
+     */
+    private final String LOG_IMG_FOLDER = LOGS_FOLDER + "images/";
+
+    private final String COMPONENT_MSG_ID = "[COMPONENT MSG]";
+    private final int idx;
+    private boolean hasFails = false;
+    private boolean hasWarns = false;
+    private Logger consoleLogger;
+
+    TestLogger(TestDescription testDescription, int idx) {
+        hasFails = false;
+        hasWarns = false;
+        this.idx = idx;
+
+        String loggerName = "selenium.tests." + idx;
+
         //Order is important
-        loggerContext = (LoggerContext) LogManager.getContext(true);
-        configuration = loggerContext.getConfiguration();
-        patternLayout = PatternLayout.createDefaultLayout(configuration);
-        consoleAppender = ConsoleAppender.createDefaultAppenderForLayout(patternLayout);
+        LoggerContext loggerContext = (LoggerContext) LogManager.getContext(true);
+        Configuration configuration = loggerContext.getConfiguration();
+        PatternLayout patternLayout = PatternLayout.createDefaultLayout(configuration);
+        ConsoleAppender consoleAppender = ConsoleAppender.createDefaultAppenderForLayout(patternLayout);
         consoleAppender.start();
         configuration.addAppender(consoleAppender);
 
-        //    fileAppender = new FileAppender("FileAppender", layout, null, null, "report.txt", false, false, null);
-
         //LoggerConfig name and Logger name must match
-        consoleLoggerConfig = new LoggerConfig(loggerName, Level.INFO, false);
+        LoggerConfig consoleLoggerConfig = new LoggerConfig(loggerName, Level.DEBUG, false);
         consoleLoggerConfig.addAppender(consoleAppender, null, null);
 
         configuration.addLogger(loggerName, consoleLoggerConfig);
         loggerContext.updateLoggers();
+
+        consoleLogger = loggerContext.getLogger(loggerName);
     }
 
+    public int getIdx() {
+        return idx;
+    }
 
+    /**
+     * Were fails within testISF34 or not
+     *
+     * @return true if method fail was called at least once
+     */
+    public boolean hasFails() {
+        return hasFails;
+    }
+
+    /**
+     * Were warns within testISF34 or not
+     *
+     * @return true if method warn was called at least once
+     */
+    public boolean hasWarns() {
+        return hasWarns;
+    }
+
+    /**
+     * Logs in message with Component level id
+     *
+     * @param message Message
+     * @see #COMPONENT_MSG_ID
+     */
+    public void componentInfo(String message) {
+        debug(COMPONENT_MSG_ID + message);
+    }
+
+    /**
+     * Logs in message with Component level id
+     *
+     * @param message Message
+     * @see #COMPONENT_MSG_ID
+     */
+    public void componentInfo(String message, String screenShotBase64) {
+        componentInfo(message + processScreenShot(screenShotBase64));
+    }
+
+    /**
+     * logs info message
+     *
+     * @param message Message
+     */
+    public void info(String message) {
+        consoleLogger.info(message);
+    }
+
+    /**
+     * logs debug level message
+     *
+     * @param message Message
+     */
+    public void debug(String message) {
+        consoleLogger.debug(message);
+    }
+
+    /**
+     * logs warning message
+     *
+     * @param message Message
+     */
+    public void warn(String message) {
+        hasWarns = true;
+        consoleLogger.warn(message);
+    }
+
+    /**
+     * logs error level message
+     *
+     * @param message Message
+     */
+    public void fail(String message) {
+        hasFails = true;
+        consoleLogger.error(message);
+    }
+
+    /**
+     * logs fatal level message
+     *
+     * @param message Message
+     */
+    public void error(String message) {
+        hasFails = true;
+        consoleLogger.fatal(message);
+        throw new UnloggingException(message);
+    }
+
+    /**
+     * logs pass level message (the same as info level but in layout level will be transformed to PASS and highlighted with green)
+     *
+     * @param message Message
+     */
+    public void success(String message) {
+        consoleLogger.info("[PASS]" + message);
+    }
+
+    /**
+     * logs info level message and places screen shot in log
+     *
+     * @param message          Text message
+     * @param screenShotBase64 Screen shot in BASE64 format
+     * @see org.openqa.selenium.TakesScreenshot;
+     */
+    public void info(String message, String screenShotBase64) {
+        info(message + processScreenShot(screenShotBase64));
+    }
+
+    /**
+     * logs debug level message and places screen shot in log
+     *
+     * @param message          Text message
+     * @param screenShotBase64 Screen shot in BASE64 format
+     * @see org.openqa.selenium.TakesScreenshot;
+     */
+    public void debug(String message, String screenShotBase64) {
+        debug(message + processScreenShot(screenShotBase64));
+    }
+
+    /**
+     * logs warning level message and places screen shot in log
+     *
+     * @param message          Text message
+     * @param screenShotBase64 Screen shot in BASE64 format
+     * @see org.openqa.selenium.TakesScreenshot;
+     */
+    public void warn(String message, String screenShotBase64) {
+        warn(message + processScreenShot(screenShotBase64));
+    }
+
+    /**
+     * logs error level message and places screen shot in log
+     *
+     * @param message          Text message
+     * @param screenShotBase64 Screen shot in BASE64 format
+     * @see org.openqa.selenium.TakesScreenshot;
+     */
+    public void fail(String message, String screenShotBase64) {
+        fail(message + processScreenShot(screenShotBase64));
+    }
+
+    /**
+     * logs fatal level message and places screen shot in log
+     *
+     * @param message          Text message
+     * @param screenShotBase64 Screen shot in BASE64 format
+     * @see org.openqa.selenium.TakesScreenshot;
+     */
+    public void error(String message, String screenShotBase64) {
+        error(message + processScreenShot(screenShotBase64));
+    }
+
+    /**
+     * logs success level message and places screen shot in log
+     *
+     * @param message          Text message
+     * @param screenShotBase64 Screen shot in BASE64 format
+     * @see org.openqa.selenium.TakesScreenshot;
+     * @see #success(String)
+     */
+    public void success(String message, String screenShotBase64) {
+        success(message + processScreenShot(screenShotBase64));
+    }
 
     /**
      * Processes screen shot info. Creates screen shot file in log folder
@@ -80,7 +244,7 @@ public class TestLogger {
      * @param screenShotBase64 Screen shot in BASE64 format
      * @return Screen shot id with file path info (should be formatted with layout)
      */
-    /*private String processScreenShot(String screenShotBase64) {
+    private String processScreenShot(String screenShotBase64) {
 
         if (screenShotBase64 == null) return "\nUnable to get screenshot";
 
@@ -89,7 +253,7 @@ public class TestLogger {
             File logScreenshot = File.createTempFile("screenshot", ".png", new File(LOG_IMG_FOLDER));
             logScreenshot.createNewFile();
             stream = new FileOutputStream(logScreenshot);
-            stream.write(new Base64Encoder().decode(screenShotBase64));
+            new Base64Encoder().decode(screenShotBase64, stream);
             return SCREEN_SHOT_ID + new File(LOG_IMG_FOLDER).getName() + "/" + logScreenshot.getName() + "]";
         } catch (IOException e) {
             throw new WebDriverException(e);
@@ -102,6 +266,6 @@ public class TestLogger {
                 }
             }
         }
-    }*/
+    }
 
 }

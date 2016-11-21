@@ -13,6 +13,11 @@ public class BrowserConfig {
     private boolean javascriptEnabled;
     private Platform platform;
 
+    private String appURL;
+    private int elementTimeout;
+    private int pageTimeout;
+    private int elementTimeoutInterval;
+
     public BrowserConfig(String webDriver, BrowserName browserName, boolean javascriptEnabled, Platform platform) {
         this.webDriver = webDriver;
         this.browserName = browserName;
@@ -28,7 +33,7 @@ public class BrowserConfig {
         this.webDriver = webDriver;
     }
 
-    public BrowserName getBrowser() {
+    public BrowserName getBrowserName() {
         return browserName;
     }
 

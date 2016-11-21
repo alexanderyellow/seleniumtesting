@@ -1,11 +1,8 @@
 package selenium.webconfigure.context;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import selenium.pages.AbstractPage;
 import selenium.webconfigure.Browser;
-import selenium.webconfigure.Browser.BrowserName;
-import selenium.webconfigure.BrowserConfig;
 
 import java.lang.reflect.Method;
 import java.util.UUID;
@@ -18,12 +15,11 @@ import java.util.UUID;
 @Component
 public class ExecutionContext {
 
+    private final String uuid = UUID.randomUUID() + "";
     private Browser browser;
     private boolean isInitialized = false;
     private AbstractPage currentPage = null;
-    private Thread thread = null;
     private Method method = null;
-    private final String uuid = UUID.randomUUID() + "";
 
     public ExecutionContext() {
     }
@@ -45,6 +41,10 @@ public class ExecutionContext {
         return isInitialized;
     }
 
+    public void setInitialized(boolean initialized) {
+        isInitialized = initialized;
+    }
+
     /**
      * Set context initialized
      *
@@ -54,24 +54,12 @@ public class ExecutionContext {
         this.isInitialized = isInitialized;
     }
 
-    public void setInitialized(boolean initialized) {
-        isInitialized = initialized;
-    }
-
     public AbstractPage getCurrentPage() {
         return currentPage;
     }
 
     public void setCurrentPage(AbstractPage currentPage) {
         this.currentPage = currentPage;
-    }
-
-    public Thread getThread() {
-        return thread;
-    }
-
-    public void setThread(Thread thread) {
-        this.thread = thread;
     }
 
     public Method getMethod() {
@@ -104,8 +92,8 @@ public class ExecutionContext {
      * @return String info about context
      */
     public String toString() {
-        return "UUID: " + uuid + ", current page: " + currentPage + "," +
-                " thread: " + (thread == null ? "null" : thread.getId() + ", method: " + method);
+        return "UUID: " + uuid + ", current page: " + currentPage + ","
+                + ", method: " + method;
     }
 
 }

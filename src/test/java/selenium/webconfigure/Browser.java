@@ -6,7 +6,6 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.ScreenshotException;
@@ -23,28 +22,7 @@ import java.util.UUID;
  */
 public class Browser {
 
-    public enum BrowserName {
-        CHROME("CHROME"),
-        IE("IE"),
-        FF("FF");
-
-        private final String browserName;
-
-        BrowserName(String value) {
-            browserName = value;
-        }
-
-        public static BrowserName fromString(String value) {
-            return valueOf(value.toUpperCase());
-        }
-
-        public String toString() {
-            return browserName;
-        }
-    }
-
     private final static List<WebDriver> drivers = new ArrayList<WebDriver>();
-    private BrowserConfig browserConfig;
     private static RemoteWebDriver driver;
 
     static {
@@ -64,6 +42,7 @@ public class Browser {
     }
 
     private final String id;
+    private BrowserConfig browserConfig;
 
     public Browser(BrowserConfig browserConfig) {
         this.id = UUID.randomUUID() + "";
@@ -78,13 +57,13 @@ public class Browser {
     private synchronized void initDriver() {
         DesiredCapabilities capabilities;
 
-        switch (browserConfig.getBrowser()) {
+        switch (browserConfig.getBrowserName()) {
             case CHROME:
             //    System.setProperty("webdriver.chrome.driver", "src/test/resources/drivers/chromedriver");
                 capabilities = DesiredCapabilities.chrome();
                 capabilities.setJavascriptEnabled(browserConfig.getJavascriptEnabled());
                 capabilities.setPlatform(browserConfig.getPlatform());
-                capabilities.setBrowserName(browserConfig.getBrowser().toString());
+                capabilities.setBrowserName(browserConfig.getBrowserName().toString());
 
                 driver = new ChromeDriver(new ChromeDriverService.Builder()
                         .usingDriverExecutable(new File(browserConfig.getWebDriver()))
@@ -103,7 +82,7 @@ public class Browser {
                 capabilities = DesiredCapabilities.firefox();
                 capabilities.setJavascriptEnabled(browserConfig.getJavascriptEnabled());
                 capabilities.setPlatform(browserConfig.getPlatform());
-                capabilities.setBrowserName(browserConfig.getBrowser().toString());
+                capabilities.setBrowserName(browserConfig.getBrowserName().toString());
 
                 driver = new FirefoxDriver(capabilities);
                 System.out.println("FF");
@@ -206,5 +185,25 @@ public class Browser {
         }
 
         return super.equals(o);
+    }
+
+    public enum BrowserName {
+        CHROME("CHROME"),
+        IE("IE"),
+        FF("FF");
+
+        private final String browserName;
+
+        BrowserName(String value) {
+            browserName = value;
+        }
+
+        public static BrowserName fromString(String value) {
+            return valueOf(value.toUpperCase());
+        }
+
+        public String toString() {
+            return browserName;
+        }
     }
 }

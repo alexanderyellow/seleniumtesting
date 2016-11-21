@@ -15,9 +15,6 @@
         <Root level="info">
             <AppenderRef ref="FileAppender"/>
         </Root>
-        <!--<logger name="name" level="info">
-            <AppenderRef ref="ConsoleAppender"/>
-        </logger>-->
     </Loggers>
 
 </Configuration>

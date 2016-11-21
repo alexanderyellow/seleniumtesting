@@ -8,19 +8,14 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
-import selenium.webconfigure.Browser;
-import selenium.webconfigure.BrowserConfig;
 import selenium.webconfigure.Browser.BrowserName;
-
-import java.lang.reflect.Method;
+import selenium.webconfigure.BrowserConfig;
 
 /**
- * Created by alexander.
- * <p>
  * Read context properties from config file and set ExecutionContext
  */
 @Configuration
-@PropertySource("file:src/test/resources/browserconfig.properties")
+@PropertySource({"file:src/test/resources/browserconfig.properties", "file:src/test/resources/environment.properties"})
 public class ContextConfiguration {
 
     private static final String BROWSER_NAME = "browser.name";
@@ -38,11 +33,18 @@ public class ContextConfiguration {
 
     @Bean
     @Scope("prototype")
-    public BrowserConfig browserConfig(/*Method method*/) {
+    public BrowserConfig browserConfig() {
         BrowserName browserName = BrowserName.fromString(env.getProperty(BROWSER_NAME));
         String webdriver = env.getProperty(WEBDRIVER);
         Platform platform = Platform.fromString(env.getProperty(PLATFORM));
         boolean javascriptEnabled = Boolean.valueOf(env.getProperty(JAVASCRIPT_ENABLED));
+
+        selenium.common.Environment environment = selenium.common.Environment.get();
+        environment.setAppURL(env.getProperty("app.url"));
+        environment.setElementTimeout(Integer.parseInt(env.getProperty("element.timeout")));
+        environment.setPageTimeout(Integer.parseInt(env.getProperty("page.timeout")));
+        environment.setElementTimeoutInterval(Integer.parseInt(env.getProperty("element.timeout.interval")));
+        environment.setZeroTimeout(Integer.parseInt(env.getProperty("zero.timeout")));
 
     //    Browser browser = new Browser(browserConfig);
     //    System.out.println("Browser = " + browser);
