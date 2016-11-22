@@ -79,10 +79,6 @@ public class DefaultListener implements ITestListener, IConfigurationListener {
      */
     public void onTestSkipped(ITestResult iTestResult) {
 
-        Thread testThread;
-
-        ExecutionContext executionContext = ExecutionContextManager.get().getExecutionContext();
-
         TestDescription testDescription = new TestDescription();
         testDescription.setName((iTestResult.getTestName() == null ?
                 iTestResult.getMethod().getConstructorOrMethod().getName() : iTestResult.getTestName()) + " SKIPPED");
@@ -95,8 +91,8 @@ public class DefaultListener implements ITestListener, IConfigurationListener {
                 TestUtils.getThrowableFullDescription(
                         (iTestResult.getThrowable()) == null ? lastKnownThrowable : iTestResult.getThrowable())
         );
-        //Logger.getLogger().endTestSession(testThread);
 
+        Logger.getLogger().endTestSession();
     }
 
     /**
