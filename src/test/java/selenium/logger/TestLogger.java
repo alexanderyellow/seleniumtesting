@@ -12,10 +12,7 @@ import org.bouncycastle.util.encoders.Base64Encoder;
 import org.openqa.selenium.WebDriverException;
 import selenium.common.TestDescription;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -247,6 +244,17 @@ public class TestLogger {
     private String processScreenShot(String screenShotBase64) {
 
         if (screenShotBase64 == null) return "\nUnable to get screenshot";
+
+        try {
+            File dir = new File(LOG_IMG_FOLDER);
+            boolean successful = dir.mkdirs();
+            if (!successful) {
+                throw new FileNotFoundException();
+            }
+        } catch (FileNotFoundException e) {
+            consoleLogger.error(LOG_IMG_FOLDER + " can't be created!");
+            e.printStackTrace();
+        }
 
         OutputStream stream = null;
         try {

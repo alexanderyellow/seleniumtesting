@@ -10,6 +10,8 @@ import selenium.logger.Logger;
 import selenium.webconfigure.Browser;
 import selenium.webconfigure.context.ExecutionContextManager;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,15 +33,12 @@ public class AbstractTest {
         TestRunner tr = (TestRunner) iTestContext;
         tr.addListener(DefaultListener.getInstance());
 
-
-
-
         /*Element.setElementTimeout(Environment.get().getElementTimeout());
         Element.setElementTimeoutInterval(Environment.get().getElementTimeoutInterval());
         Element.addAjaxLoadManager(new AjaxProcessingManager());*/
     }
 
-    @BeforeTest
+   /* @BeforeTest
     public void beforeTest(ITestContext iTestContext) {
         TestDescription testDescription = new TestDescription()
                 .setClassName(iTestContext.getName())
@@ -51,6 +50,7 @@ public class AbstractTest {
         logger.startNewTestSession(testDescription);
         browser = ExecutionContextManager.get().createContext().getBrowser();
         browser.maximize();
+    //    browser.get("google.com");
     }
 
     @BeforeMethod
@@ -61,11 +61,11 @@ public class AbstractTest {
 
     @AfterTest
     public void afterMethod() {
-        /*if (ExecutionContextManager.hasContext(method)) {
-            ExecutionContextManager.releaseContext(ExecutionContextManager.getOrCreateContext(method));
-        }*/
+        *//*if (ExecutionContextManager.hasContext(method)) {
+            ExecutionContextManager.releaseContext(ExecutionContextManager.createContext(method));
+        }*//*
         browser.quit();
         logger.endTestSession();
-    }
+    }*/
 
 }

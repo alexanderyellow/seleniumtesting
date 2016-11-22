@@ -11,7 +11,7 @@ import selenium.webconfigure.context.ExecutionContext;
 import selenium.webconfigure.context.ExecutionContextManager;
 
 /**
- * Created by alexander.
+ * DefaultListener
  */
 public class DefaultListener implements ITestListener, IConfigurationListener {
 
@@ -38,8 +38,11 @@ public class DefaultListener implements ITestListener, IConfigurationListener {
     public void onTestSuccess(ITestResult iTestResult) {
         if (!Logger.get().hasFails()) {
             ExecutionContext executionContext = ExecutionContextManager.get().getExecutionContext();
-            Browser browser = executionContext.getBrowser();
-            Logger.get().success("Test PASS", browser.getScreenShot());
+
+            if (executionContext != null) {
+                Browser browser = executionContext.getBrowser();
+                Logger.get().success("Test PASS", browser.getScreenShot());
+            }
         }
     }
 
@@ -54,7 +57,7 @@ public class DefaultListener implements ITestListener, IConfigurationListener {
             ExecutionContext executionContext = ExecutionContextManager.get().getExecutionContext();
             Browser browser = executionContext.getBrowser();
 
-            printTrace();
+//            printTrace();
             if (iTestResult.getThrowable() != null) {
                 if (browser != null) {
                     Logger.get().debug("Page source on error:\n" + browser.getPageSource());

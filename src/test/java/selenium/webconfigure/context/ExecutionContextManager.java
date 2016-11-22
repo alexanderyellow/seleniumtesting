@@ -15,7 +15,8 @@ public class ExecutionContextManager {
     private static ExecutionContextManager _instance;
     private ExecutionContext executionContext;
 
-    private ExecutionContextManager() {}
+    private ExecutionContextManager() {
+    }
 
     public ExecutionContext createContext(/*Method method*/) {
         ApplicationContext context = new AnnotationConfigApplicationContext(ContextConfiguration.class);
@@ -23,7 +24,6 @@ public class ExecutionContextManager {
 
         executionContext = new ExecutionContext();
         executionContext.setBrowser(new Browser(browserConfig));
-        //executionContext.setMethod(method);
 
         return executionContext;
     }
@@ -33,7 +33,7 @@ public class ExecutionContextManager {
     }
 
     public static ExecutionContextManager get() {
-        if(_instance == null) {
+        if (_instance == null) {
             _instance = new ExecutionContextManager();
             return _instance;
         }
