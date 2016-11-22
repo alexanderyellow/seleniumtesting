@@ -5,6 +5,7 @@ import org.testng.ITestResult;
 import org.testng.TestRunner;
 import org.testng.annotations.*;
 import selenium.common.TestDescription;
+import selenium.logger.DefaultListener;
 import selenium.logger.Logger;
 import selenium.webconfigure.Browser;
 import selenium.webconfigure.context.ExecutionContextManager;
@@ -28,7 +29,7 @@ public class AbstractTest {
     public void beforeSuite(ITestContext iTestContext) {
 
         TestRunner tr = (TestRunner) iTestContext;
-    //    tr.addListener(DefaultListener.getInstance());
+        tr.addListener(DefaultListener.getInstance());
 
 
 

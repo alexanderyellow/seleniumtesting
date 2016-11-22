@@ -1,11 +1,19 @@
 package selenium.logger;
 
+import org.testng.IConfigurationListener;
+import org.testng.ITestContext;
+import org.testng.ITestListener;
 import org.testng.ITestResult;
+import selenium.common.TestDescription;
+import selenium.helpers.TestUtils;
+import selenium.webconfigure.Browser;
+import selenium.webconfigure.context.ExecutionContext;
+import selenium.webconfigure.context.ExecutionContextManager;
 
 /**
  * Created by alexander.
  */
-public class DefaultListener {//implements ITestListener, IConfigurationListener {
+public class DefaultListener implements ITestListener, IConfigurationListener {
 
     private final static DefaultListener _instance = new DefaultListener();
     private Throwable lastKnownThrowable = null;
@@ -27,108 +35,60 @@ public class DefaultListener {//implements ITestListener, IConfigurationListener
      * @param iTestResult iTestResult in TestNG
      * @see org.testng.ITestListener
      */
-    /*public void onTestSuccess(ITestResult iTestResult) {
-        if (Logger.getLogger().hasTestSession()) {
-            if (!Logger.get().hasFails()) {
-                ExecutionContext executionContext = ExecutionContextManager.getOrCreateContext(iTestResult.getMethod()
-                        .getConstructorOrMethod().getMethod());
-                Browser browser = executionContext == null ? null : executionContext.getBrowserName();
-                Logger.get().success("Test PASS", browser == null ? null : browser.getScreenShot());
-            }
+    public void onTestSuccess(ITestResult iTestResult) {
+        if (!Logger.get().hasFails()) {
+            ExecutionContext executionContext = ExecutionContextManager.get().getExecutionContext();
+            Browser browser = executionContext.getBrowser();
+            Logger.get().success("Test PASS", browser.getScreenShot());
         }
-    }*/
+    }
 
     /**
      * Places message about critical error in Logger with page screenshot
      *
      * @param iTestResult iTestResult in TestNG
      * @see org.testng.ITestListener
-     *//*
+     */
     public void onTestFailure(ITestResult iTestResult) {
         if (iTestResult.getMethod().isTest()) {
-            ExecutionContext executionContext = null;
-            if (ExecutionContextManager.hasContext(iTestResult.getMethod()
-                    .getConstructorOrMethod().getMethod())) {
-                executionContext = ExecutionContextManager.getOrCreateContext(iTestResult.getMethod()
-                        .getConstructorOrMethod().getMethod());
-            }
+            ExecutionContext executionContext = ExecutionContextManager.get().getExecutionContext();
+            Browser browser = executionContext.getBrowser();
 
-            Browser browser = executionContext == null ? null : executionContext.getBrowserName();
-
-            if (Logger.getLogger().hasTestSession()) {
-                printTrace();
-                if (iTestResult.getThrowable() != null) {
-
-                    if (browser != null) {
-                        Logger.get().debug("Page source on error:\n" + browser.getPageSource());
-                    }
-
-                    Logger.get().debug("There is critical error in test:\n" +
-                            "\n" +
-                            "Exception:\n" +
-                            TestUtils.getThrowableFullDescription(iTestResult.getThrowable()));
-
-                    if (iTestResult.getThrowable() instanceof UIInteractionException) {
-
-                        if (!(iTestResult.getThrowable() instanceof UnloggingException)) {
-                            Logger.get().fail("There is critical error in test:\n" +
-                                            "\n" +
-                                            "Exception:\n" +
-                                            ((UIInteractionException) iTestResult.getThrowable()).describeThrowable(),
-                                    (browser != null ? browser.getScreenShot() : null));
-                        }
-                    } else {
-                        if (!(iTestResult.getThrowable() instanceof UnloggingException)) {
-                            Logger.get().fail("There is critical error in test:\n" +
-                                            "\n" +
-                                            "Exception:\n" +
-                                            TestUtils.getThrowableFullDescription(iTestResult.getThrowable()),
-                                    (browser != null ? browser.getScreenShot() : null));
-                        }
-                    }
+            printTrace();
+            if (iTestResult.getThrowable() != null) {
+                if (browser != null) {
+                    Logger.get().debug("Page source on error:\n" + browser.getPageSource());
                 }
-                //Logger.getLogger().endTestSession();
             }
+
+            Logger.getLogger().endTestSession();
             lastKnownThrowable = null;
         } else {
             lastKnownThrowable = iTestResult.getThrowable();
         }
-
     }
 
-    *//**
-     * Places message about testISF34 skipped in Logger
+    /**
+     * Places message about skipped test in Logger
      *
      * @param iTestResult iTestResult in TestNG
      * @see org.testng.ITestListener
-     *//*
+     */
     public void onTestSkipped(ITestResult iTestResult) {
 
         Thread testThread;
 
-        ExecutionContext executionContext = null;
-        if (ExecutionContextManager.hasContext(iTestResult.getMethod()
-                .getConstructorOrMethod().getMethod())) {
-            executionContext = ExecutionContextManager.getOrCreateContext(iTestResult.getMethod()
-                    .getConstructorOrMethod().getMethod());
-        }
+        ExecutionContext executionContext = ExecutionContextManager.get().getExecutionContext();
 
-        if (executionContext != null && executionContext.getThread() != null) {
-            testThread = executionContext.getThread();
-        } else {
-            testThread = Thread.currentThread();
-        }
+        TestDescription testDescription = new TestDescription();
+        testDescription.setName((iTestResult.getTestName() == null ?
+                iTestResult.getMethod().getConstructorOrMethod().getName() : iTestResult.getTestName()) + " SKIPPED");
+        testDescription.setClassName(iTestResult.getTestClass().getRealClass().getName());
+        testDescription.setDescription("NO DESCRIPTION AVAILABLE");
+        Logger.getLogger().startNewTestSession(testDescription);
 
-        if (!Logger.getLogger().hasTestSession(testThread)) {
-            TestDescription testDescription = new TestDescription();
-            testDescription.setName((iTestResult.getTestName() == null ?
-                    iTestResult.getMethod().getConstructorOrMethod().getName() : iTestResult.getTestName()) + " SKIPPED");
-            testDescription.setClassName(iTestResult.getTestClass().getRealClass().getName());
-            testDescription.setDescription("NO DESCRIPTION AVAILABLE");
-            Logger.getLogger().startNewTestSession(testDescription);
-        }
         printTrace();
-        Logger.get(testThread).fail("Test " + iTestResult.getMethod().toString() + " is skipped\n" +
+        Logger.get().fail("Test " + iTestResult.getMethod().toString() + " is skipped\n" +
                 TestUtils.getThrowableFullDescription(
                         (iTestResult.getThrowable()) == null ? lastKnownThrowable : iTestResult.getThrowable())
         );
@@ -136,26 +96,20 @@ public class DefaultListener {//implements ITestListener, IConfigurationListener
 
     }
 
-    *//**
+    /**
      * Places message about errors in Logger with page screenshot
      *
      * @param iTestResult iTestResult in TestNG
      * @see org.testng.ITestListener
-     *//*
+     */
     public void onTestFailedButWithinSuccessPercentage(ITestResult iTestResult) {
-        if (Logger.getLogger().hasTestSession()) {
-            printTrace();
-            ExecutionContext executionContext = null;
-            if (ExecutionContextManager.hasContext(iTestResult.getMethod()
-                    .getConstructorOrMethod().getMethod())) {
-                executionContext = ExecutionContextManager.getOrCreateContext(iTestResult.getMethod()
-                        .getConstructorOrMethod().getMethod());
-            }
-            Browser browser = executionContext == null ? null : executionContext.getBrowserName();
-            Logger.get().fail("There is critical error in test:\n" +
-                            TestUtils.getThrowableFullDescription(iTestResult.getThrowable()),
-                    (browser != null ? browser.getScreenShot() : null));
-        }
+        printTrace();
+
+        ExecutionContext executionContext = ExecutionContextManager.get().getExecutionContext();
+        Browser browser = executionContext.getBrowser();
+        Logger.get().fail("There is critical error in test:\n" +
+                        TestUtils.getThrowableFullDescription(iTestResult.getThrowable()),
+                (browser != null ? browser.getScreenShot() : null));
     }
 
     public void onStart(ITestContext iTestContext) {
@@ -179,8 +133,8 @@ public class DefaultListener {//implements ITestListener, IConfigurationListener
         try {
             throw new RuntimeException();
         } catch (Throwable t) {
-            //    Logger.get().debug("LISTENER INVOKED:\n" + TestUtils.getThrowableFullDescription(t));
+            Logger.get().debug("LISTENER INVOKED:\n" + TestUtils.getThrowableFullDescription(t));
         }
-    }*/
+    }
 
 }
