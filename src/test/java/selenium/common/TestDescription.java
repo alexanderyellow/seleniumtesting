@@ -9,7 +9,6 @@ public class TestDescription {
     private String description = "'";
     private String methodName = "";
     private String className;
-    private boolean isConfig = false;
 
     public String getName() {
         return name;
@@ -17,15 +16,6 @@ public class TestDescription {
 
     public TestDescription setName(String name) {
         this.name = name;
-        return this;
-    }
-
-    public String isConfig() {
-        return isConfig + "";
-    }
-
-    public TestDescription setIsConfig(boolean value) {
-        this.isConfig = value;
         return this;
     }
 

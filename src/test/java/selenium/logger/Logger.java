@@ -98,7 +98,6 @@ public class Logger {
 
         log4jLogger.info(NEW_TEST_ID + ":[NAME:" + testDescription.getName() + "]:[CLASS:" + className + "]:" +
                 "[DESC:" + testDescription.getDescription() + "]" +
-                ":[CONFIG:" + testDescription.isConfig() + "]:" +
                 "[INDEX:" + testLogger.getIdx() + "]");
 
         return testLogger;

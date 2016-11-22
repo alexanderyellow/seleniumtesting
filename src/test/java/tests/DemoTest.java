@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
  */
 public class DemoTest extends AbstractTest {
 
-    @Test
+    @Test(description = "lala1")
     public void test1() {
         //System.setProperty("webdriver.chrome.driver", "src/test/resources/drivers/chromedriver");
 
@@ -19,7 +19,7 @@ public class DemoTest extends AbstractTest {
 
     //    TestLogger testLogger = new TestLogger("name");
 
-
+        System.out.println("Test1 is in process!");
         Assert.assertTrue(true);
     //    testLogger.getConsoleLogger().info("Lalala");
 
@@ -55,6 +55,12 @@ public class DemoTest extends AbstractTest {
 
         /*Browser browser = new Browser();
         browser.createNew(BrowserNames.CHROME);*/
+    }
+
+    @Test(description = "lala2")
+    public void test2() {
+        System.out.println("Test2 is in process!");
+        Assert.assertTrue(true);
     }
 
 }

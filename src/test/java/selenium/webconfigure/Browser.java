@@ -59,7 +59,7 @@ public class Browser {
 
         switch (browserConfig.getBrowserName()) {
             case CHROME:
-            //    System.setProperty("webdriver.chrome.driver", "src/test/resources/drivers/chromedriver");
+            //    System.setProperty("webdriver.chrome.driver", "src\\test\\resources\\drivers\\chromedriver");
                 capabilities = DesiredCapabilities.chrome();
                 capabilities.setJavascriptEnabled(browserConfig.getJavascriptEnabled());
                 capabilities.setPlatform(browserConfig.getPlatform());
@@ -78,7 +78,8 @@ public class Browser {
                 System.out.println("IE");
                 break;
             case FF:
-                System.setProperty("webdriver.firefox.marionette","D:\\TestProject\\seleniumtesting\\src\\test\\resources\\drivers");
+                //it's necessary
+                System.setProperty("webdriver.firefox.marionette","src\\test\\resources\\drivers");
                 capabilities = DesiredCapabilities.firefox();
                 capabilities.setJavascriptEnabled(browserConfig.getJavascriptEnabled());
                 capabilities.setPlatform(browserConfig.getPlatform());

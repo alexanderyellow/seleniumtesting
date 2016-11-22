@@ -12,20 +12,33 @@ import java.lang.reflect.Method;
  */
 public class ExecutionContextManager {
 
-    /**
-     * List of contexts
-     */
-    private static ExecutionContext executionContext;
+    private static ExecutionContextManager _instance;
+    private ExecutionContext executionContext;
 
-    public static ExecutionContext createContext(Method method) {
+    private ExecutionContextManager() {}
+
+    public ExecutionContext createContext(/*Method method*/) {
         ApplicationContext context = new AnnotationConfigApplicationContext(ContextConfiguration.class);
         BrowserConfig browserConfig = (BrowserConfig) context.getBean("browserConfig");
 
         executionContext = new ExecutionContext();
         executionContext.setBrowser(new Browser(browserConfig));
-        executionContext.setMethod(method);
+        //executionContext.setMethod(method);
 
         return executionContext;
+    }
+
+    public ExecutionContext getExecutionContext() {
+        return executionContext;
+    }
+
+    public static ExecutionContextManager get() {
+        if(_instance == null) {
+            _instance = new ExecutionContextManager();
+            return _instance;
+        }
+
+        return _instance;
     }
 
 }
