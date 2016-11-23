@@ -10,10 +10,10 @@ import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.bouncycastle.util.encoders.Base64Encoder;
 import org.openqa.selenium.WebDriverException;
 
-import java.io.*;
-import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * Logger.
@@ -21,25 +21,21 @@ import java.util.Date;
 public class Logger {
 
     /**
+     * Instance of logger
+     */
+    private static Logger _instance = null;
+    /**
      * Folder where extended logs should be placed
      */
     private final String LOGS_FOLDER = "target/selenium-logs/";
-
     /**
      * Substring of screenshot in message
      */
     private final String SCREEN_SHOT_ID = "[screenshot:";
-
     /**
      * Path to folder with screenshot images
      */
     private final String LOG_IMG_FOLDER = LOGS_FOLDER + "images/";
-
-    /**
-     * Instance of logger
-     */
-    private static Logger _instance = null;
-
     /**
      * log4j logger
      */
@@ -80,16 +76,16 @@ public class Logger {
         return _instance;
     }
 
+    public static Logger get() {
+        if (_instance == null) throw new RuntimeException("Logger not initialized");
+        return _instance;
+    }
+
     /**
      * Release logger
      */
     public void release() {
         _instance = null;
-    }
-
-    public static Logger get() {
-        if (_instance == null) throw new RuntimeException("Logger not initialized");
-        return _instance;
     }
 
     public void startTestSession(String testName) {
@@ -120,6 +116,14 @@ public class Logger {
         consoleLogger.error(message);
     }
 
+    public void fail(String message, String screenShotBase64) {
+        consoleLogger.error(message + " " + processScreenShot(screenShotBase64));
+    }
+
+    public void success(String message, String screenShotBase64) {
+        consoleLogger.info(message + " " + processScreenShot(screenShotBase64));
+    }
+
     /**
      * Processes screen shot info. Creates screen shot file in log folder
      *
@@ -129,16 +133,10 @@ public class Logger {
     private String processScreenShot(String screenShotBase64) {
 
         if (screenShotBase64 == null) return "\nUnable to get screenshot";
+        File dir = new File(LOG_IMG_FOLDER);
 
-        try {
-            File dir = new File(LOG_IMG_FOLDER);
-            boolean successful = dir.mkdirs();
-            if (!successful) {
-                throw new FileNotFoundException();
-            }
-        } catch (FileNotFoundException e) {
-            consoleLogger.error(LOG_IMG_FOLDER + " can't be created!");
-            e.printStackTrace();
+        if (!dir.exists()) {
+            dir.mkdirs();
         }
 
         OutputStream stream = null;

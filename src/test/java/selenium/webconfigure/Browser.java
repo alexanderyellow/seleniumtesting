@@ -16,9 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Configure working with the Browser.
- * <p>
- * Created by alexander.
+ * Configure working with the Browser
  */
 public class Browser {
 
@@ -70,8 +68,6 @@ public class Browser {
                         .usingAnyFreePort()
                         .build(), capabilities);
 
-                System.out.println("initBrowser: " + driver);
-
                 System.out.println("Chrome");
                 break;
             case IE:
@@ -110,7 +106,8 @@ public class Browser {
      * @param url navigation url
      */
     public void get(String url) {
-        driver.navigate().to(url);
+        //driver.navigate().to(url);
+        driver.get(url);
     }
 
     /**
@@ -141,7 +138,7 @@ public class Browser {
         }
     }
 
-    public String getScreenShot() {
+    public String getScreenshot() {
         try {
             return driver.getScreenshotAs(OutputType.BASE64);
         } catch (Exception e) {

@@ -5,8 +5,6 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import selenium.webconfigure.Browser;
 import selenium.webconfigure.BrowserConfig;
 
-import java.lang.reflect.Method;
-
 /**
  * ExecutionContextManager
  */
@@ -18,7 +16,16 @@ public class ExecutionContextManager {
     private ExecutionContextManager() {
     }
 
-    public ExecutionContext createContext(/*Method method*/) {
+    public static ExecutionContextManager get() {
+        if (_instance == null) {
+            _instance = new ExecutionContextManager();
+            return _instance;
+        }
+
+        return _instance;
+    }
+
+    public ExecutionContext createContext() {
         ApplicationContext context = new AnnotationConfigApplicationContext(ContextConfiguration.class);
         BrowserConfig browserConfig = (BrowserConfig) context.getBean("browserConfig");
 
@@ -29,16 +36,13 @@ public class ExecutionContextManager {
     }
 
     public ExecutionContext getExecutionContext() {
+        if (executionContext == null) throw new RuntimeException("Execution context isn't created!");
         return executionContext;
     }
 
-    public static ExecutionContextManager get() {
-        if (_instance == null) {
-            _instance = new ExecutionContextManager();
-            return _instance;
-        }
-
-        return _instance;
+    public void releaseExecutionContext() {
+        _instance = null;
+        executionContext = null;
     }
 
 }
