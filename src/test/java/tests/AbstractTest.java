@@ -1,20 +1,11 @@
 package tests;
 
 import org.testng.ITestContext;
-import org.testng.ITestResult;
 import org.testng.TestRunner;
 import org.testng.annotations.*;
-import selenium.common.TestDescription;
-import selenium.logger.DefaultListener;
+import selenium.logger.CustomListener;
 import selenium.logger.Logger;
 import selenium.webconfigure.Browser;
-import selenium.webconfigure.context.ExecutionContextManager;
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -31,11 +22,21 @@ public class AbstractTest {
     public void beforeSuite(ITestContext iTestContext) {
 
         TestRunner tr = (TestRunner) iTestContext;
-        tr.addListener(DefaultListener.getInstance());
+        tr.addListener(CustomListener.getInstance());
 
         /*Element.setElementTimeout(Environment.get().getElementTimeout());
         Element.setElementTimeoutInterval(Environment.get().getElementTimeoutInterval());
         Element.addAjaxLoadManager(new AjaxProcessingManager());*/
+    }
+
+    @BeforeTest
+    public void beforeTest(ITestContext iTestContext) {
+        Logger.init(iTestContext.getName());
+    }
+
+    @AfterTest
+    public void afterTest() {
+        Logger.get().release();
     }
 
    /* @BeforeTest

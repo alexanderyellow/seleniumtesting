@@ -7,33 +7,48 @@ import org.apache.logging.log4j.core.appender.ConsoleAppender;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.layout.PatternLayout;
-import selenium.common.TestDescription;
+import org.bouncycastle.util.encoders.Base64Encoder;
+import org.openqa.selenium.WebDriverException;
+
+import java.io.*;
+import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
- * Created by alexander.
+ * Logger.
  */
 public class Logger {
 
-    static final String NEW_TEST_ID = "[NEW TEST]";
-    static final String SELENIUM_PACKAGE = "selenium.tests";
-    static final String END_TEST_ID = "[TEST END]";
+    /**
+     * Folder where extended logs should be placed
+     */
+    private final String LOGS_FOLDER = "target/selenium-logs/";
+
+    /**
+     * Substring of screenshot in message
+     */
+    private final String SCREEN_SHOT_ID = "[screenshot:";
+
+    /**
+     * Path to folder with screenshot images
+     */
+    private final String LOG_IMG_FOLDER = LOGS_FOLDER + "images/";
+
     /**
      * Instance of logger
      */
     private static Logger _instance = null;
-    private static TestLogger testLogger;
-    private int idx = 1;
+
     /**
      * log4j logger
      */
-    private org.apache.logging.log4j.Logger log4jLogger;
+    private org.apache.logging.log4j.Logger consoleLogger;
 
     /**
      * Initialize logger
      */
-    private Logger() {
-        String loggerName = "selenium.tests";
-
+    private Logger(String loggerName) {
         //Order is important
         LoggerContext loggerContext = (LoggerContext) LogManager.getContext(true);
         Configuration configuration = loggerContext.getConfiguration();
@@ -49,7 +64,7 @@ public class Logger {
         configuration.addLogger(loggerName, consoleLoggerConfig);
         loggerContext.updateLoggers();
 
-        log4jLogger = loggerContext.getLogger(loggerName);
+        consoleLogger = loggerContext.getLogger(loggerName);
     }
 
     /**
@@ -57,66 +72,89 @@ public class Logger {
      *
      * @return instance of logger
      */
-    public static Logger init() {
+    public static Logger init(String loggerName) {
         if (_instance == null) {
-            _instance = new Logger();
+            _instance = new Logger(loggerName);
         }
 
         return _instance;
     }
 
-    public static Logger getLogger() {
+    /**
+     * Release logger
+     */
+    public void release() {
+        _instance = null;
+    }
+
+    public static Logger get() {
         if (_instance == null) throw new RuntimeException("Logger not initialized");
         return _instance;
     }
 
-    /**
-     * Get logger instance
-     *
-     * @return logger instance
-     */
-    public static TestLogger get() {
-        return testLogger;
+    public void startNewTestSession(String testName) {
+        consoleLogger.info("Start test: " + testName);
+    }
+
+    public void endTestMethod(String methodName, String status) {
+        consoleLogger.info("End test method: " + methodName + " :[STATUS:" + status + "]");
+    }
+
+    public void startTestMethod(String methodName) {
+        consoleLogger.info("Start test method: " + methodName);
+    }
+
+    public void info(String message) {
+        consoleLogger.info(message);
+    }
+
+    public void debug(String message) {
+        consoleLogger.debug(message);
+    }
+
+    public void error(String message) {
+        consoleLogger.error(message);
     }
 
     /**
-     * Starts new session log
+     * Processes screen shot info. Creates screen shot file in log folder
      *
-     * @param testDescription Test description
+     * @param screenShotBase64 Screen shot in BASE64 format
+     * @return Screen shot id with file path info (should be formatted with layout)
      */
-    public TestLogger startNewTestSession(TestDescription testDescription) {
-        testLogger = new TestLogger(testDescription, idx++);
+    private String processScreenShot(String screenShotBase64) {
 
-        String className = testDescription.getClassName();
-        if (className != null) {
-            int selStart = className.indexOf(SELENIUM_PACKAGE);
+        if (screenShotBase64 == null) return "\nUnable to get screenshot";
 
-            if (selStart >= 0) {
-                className = className.substring(selStart + SELENIUM_PACKAGE.length() + 1);
+        try {
+            File dir = new File(LOG_IMG_FOLDER);
+            boolean successful = dir.mkdirs();
+            if (!successful) {
+                throw new FileNotFoundException();
+            }
+        } catch (FileNotFoundException e) {
+            consoleLogger.error(LOG_IMG_FOLDER + " can't be created!");
+            e.printStackTrace();
+        }
+
+        OutputStream stream = null;
+        try {
+            File logScreenshot = File.createTempFile("screenshot", ".png", new File(LOG_IMG_FOLDER));
+            logScreenshot.createNewFile();
+            stream = new FileOutputStream(logScreenshot);
+            new Base64Encoder().decode(screenShotBase64, stream);
+            return SCREEN_SHOT_ID + new File(LOG_IMG_FOLDER).getName() + "/" + logScreenshot.getName() + "]";
+        } catch (IOException e) {
+            throw new WebDriverException(e);
+        } finally {
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                    // Nothing to do
+                }
             }
         }
-
-        log4jLogger.info(NEW_TEST_ID + ":[NAME:" + testDescription.getName() + "]:[CLASS:" + className + "]:" +
-                "[DESC:" + testDescription.getDescription() + "]" +
-                "[INDEX:" + testLogger.getIdx() + "]");
-
-        return testLogger;
-    }
-
-    /**
-     * Starts new session log
-     */
-    public synchronized void endTestSession() {
-        TestLogger testLogger = get();
-
-        String status = "pass";
-        if (testLogger.hasFails()) {
-            status = "fail";
-        } else if (testLogger.hasWarns()) {
-            status = "warn";
-        }
-
-        log4jLogger.info(END_TEST_ID + ":[STATUS:" + status + "]:[INDEX:" + testLogger.getIdx() + "]");
     }
 
 }

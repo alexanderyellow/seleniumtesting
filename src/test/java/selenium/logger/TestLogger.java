@@ -37,18 +37,15 @@ public class TestLogger {
      */
     private final String LOG_IMG_FOLDER = LOGS_FOLDER + "images/";
 
-    private final String COMPONENT_MSG_ID = "[COMPONENT MSG]";
-    private final int idx;
     private boolean hasFails = false;
     private boolean hasWarns = false;
     private Logger consoleLogger;
 
-    TestLogger(TestDescription testDescription, int idx) {
+    TestLogger(TestDescription testDescription) {
         hasFails = false;
         hasWarns = false;
-        this.idx = idx;
 
-        String loggerName = "selenium.tests." + idx;
+        String loggerName = "selenium.tests";
 
         //Order is important
         LoggerContext loggerContext = (LoggerContext) LogManager.getContext(true);
@@ -68,10 +65,6 @@ public class TestLogger {
         consoleLogger = loggerContext.getLogger(loggerName);
     }
 
-    public int getIdx() {
-        return idx;
-    }
-
     /**
      * Were fails within testISF34 or not
      *
@@ -88,26 +81,6 @@ public class TestLogger {
      */
     public boolean hasWarns() {
         return hasWarns;
-    }
-
-    /**
-     * Logs in message with Component level id
-     *
-     * @param message Message
-     * @see #COMPONENT_MSG_ID
-     */
-    public void componentInfo(String message) {
-        debug(COMPONENT_MSG_ID + message);
-    }
-
-    /**
-     * Logs in message with Component level id
-     *
-     * @param message Message
-     * @see #COMPONENT_MSG_ID
-     */
-    public void componentInfo(String message, String screenShotBase64) {
-        componentInfo(message + processScreenShot(screenShotBase64));
     }
 
     /**
