@@ -7,6 +7,8 @@ import selenium.logger.CustomListener;
 import selenium.logger.Logger;
 import selenium.webconfigure.Browser;
 
+import java.lang.reflect.Method;
+
 /**
  *
  */
@@ -31,12 +33,24 @@ public class AbstractTest {
 
     @BeforeTest
     public void beforeTest(ITestContext iTestContext) {
-        Logger.init(iTestContext.getName());
+        logger = Logger.init(iTestContext.getName());
+        logger.startTestSession(iTestContext.getName());
     }
 
     @AfterTest
-    public void afterTest() {
-        Logger.get().release();
+    public void afterTest(ITestContext iTestContext) {
+        logger.endTestSession(iTestContext.getName());
+        logger.release();
+    }
+
+    @BeforeMethod
+    public void beforeMethod(ITestContext iTestContext, Method method) {
+        logger.startTestMethod(method.getName());
+    }
+
+    @AfterMethod
+    public void afterMethod(ITestContext iTestContext, Method method) {
+        //logger.endTestMethod(method.getName());
     }
 
    /* @BeforeTest
@@ -48,7 +62,7 @@ public class AbstractTest {
                 .setName(null);
 
         logger = Logger.init();
-        logger.startNewTestSession(testDescription);
+        logger.startTestSession(testDescription);
         browser = ExecutionContextManager.get().createContext().getBrowser();
         browser.maximize();
     //    browser.get("google.com");

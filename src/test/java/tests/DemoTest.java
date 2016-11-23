@@ -60,7 +60,7 @@ public class DemoTest extends AbstractTest {
     @Test(description = "lala2")
     public void test2() {
         System.out.println("Test2 is in process!");
-        Assert.assertTrue(true);
+        Assert.assertTrue(false);
     }
 
 }

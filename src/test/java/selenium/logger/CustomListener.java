@@ -11,7 +11,7 @@ public class CustomListener implements ITestListener {
 
     private final static CustomListener _instance = new CustomListener();
 
-    public CustomListener() {
+    private CustomListener() {
     }
 
     public static CustomListener getInstance() {

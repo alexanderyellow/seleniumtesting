@@ -92,8 +92,12 @@ public class Logger {
         return _instance;
     }
 
-    public void startNewTestSession(String testName) {
+    public void startTestSession(String testName) {
         consoleLogger.info("Start test: " + testName);
+    }
+
+    public void endTestSession(String testName) {
+        consoleLogger.info("End test: " + testName);
     }
 
     public void endTestMethod(String methodName, String status) {
