@@ -68,10 +68,9 @@ public class Browser {
                         .usingAnyFreePort()
                         .build(), capabilities);
 
-                System.out.println("Chrome");
                 break;
             case IE:
-                System.out.println("IE");
+                //TODO add
                 break;
             case FF:
                 //it's necessary
@@ -82,10 +81,21 @@ public class Browser {
                 capabilities.setBrowserName(browserConfig.getBrowserName().toString());
 
                 driver = new FirefoxDriver(capabilities);
-                System.out.println("FF");
+
                 break;
             default:
-                System.out.println("Chrome");
+
+                //TODO rework duplicate code
+                capabilities = DesiredCapabilities.chrome();
+                capabilities.setJavascriptEnabled(browserConfig.getJavascriptEnabled());
+                capabilities.setPlatform(browserConfig.getPlatform());
+                capabilities.setBrowserName(browserConfig.getBrowserName().toString());
+
+                driver = new ChromeDriver(new ChromeDriverService.Builder()
+                        .usingDriverExecutable(new File(browserConfig.getWebDriver()))
+                        .usingAnyFreePort()
+                        .build(), capabilities);
+
                 break;
         }
 
@@ -106,8 +116,8 @@ public class Browser {
      * @param url navigation url
      */
     public void get(String url) {
-        //driver.navigate().to(url);
-        driver.get(url);
+        driver.navigate().to(url);
+        //driver.get(url);
     }
 
     /**
