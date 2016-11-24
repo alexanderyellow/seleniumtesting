@@ -3,24 +3,20 @@ package tests;
 import org.testng.ITestContext;
 import org.testng.TestRunner;
 import org.testng.annotations.*;
-import selenium.common.Environment;
 import selenium.logger.DefaultListener;
 import selenium.logger.Logger;
-import selenium.ui.Element;
 import selenium.webconfigure.Browser;
+import selenium.webconfigure.context.Environment;
 import selenium.webconfigure.context.ExecutionContext;
 import selenium.webconfigure.context.ExecutionContextManager;
 
 import java.lang.reflect.Method;
 
 /**
- *
+ * AbstractTest
  */
 public class AbstractTest {
 
-    /**
-     * Test browser
-     */
     protected Browser browser;
     protected Logger logger;
 

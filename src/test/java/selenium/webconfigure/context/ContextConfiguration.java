@@ -39,7 +39,7 @@ public class ContextConfiguration {
         Platform platform = Platform.fromString(env.getProperty(PLATFORM));
         boolean javascriptEnabled = Boolean.valueOf(env.getProperty(JAVASCRIPT_ENABLED));
 
-        selenium.common.Environment environment = selenium.common.Environment.get();
+        selenium.webconfigure.context.Environment environment = selenium.webconfigure.context.Environment.get();
         environment.setAppURL(env.getProperty("app.url"));
         environment.setElementTimeout(Integer.parseInt(env.getProperty("element.timeout")));
         environment.setPageTimeout(Long.parseLong(env.getProperty("page.timeout")));

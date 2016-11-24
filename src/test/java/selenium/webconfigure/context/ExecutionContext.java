@@ -1,24 +1,19 @@
 package selenium.webconfigure.context;
 
-import org.springframework.stereotype.Component;
-import selenium.pages.AbstractPage;
 import selenium.webconfigure.Browser;
 
 import java.lang.reflect.Method;
 import java.util.UUID;
 
 /**
- * Created by alexander.
- * <p>
- * Configure browser
+ * ExecutionContext
  */
-@Component
 public class ExecutionContext {
 
     private final String uuid = UUID.randomUUID() + "";
     private Browser browser;
     private boolean isInitialized = false;
-    private AbstractPage currentPage = null;
+    //private AbstractPage currentPage = null;
     private Method method = null;
 
     public ExecutionContext() {
@@ -54,13 +49,13 @@ public class ExecutionContext {
         this.isInitialized = isInitialized;
     }
 
-    public AbstractPage getCurrentPage() {
+    /*public AbstractPage getCurrentPage() {
         return currentPage;
     }
 
     public void setCurrentPage(AbstractPage currentPage) {
         this.currentPage = currentPage;
-    }
+    }*/
 
     public Method getMethod() {
         return method;
@@ -92,7 +87,7 @@ public class ExecutionContext {
      * @return String info about context
      */
     public String toString() {
-        return "UUID: " + uuid + ", current page: " + currentPage + ","
+        return "UUID: " + uuid //+ ", current page: " + currentPage + ","
                 + ", method: " + method;
     }
 

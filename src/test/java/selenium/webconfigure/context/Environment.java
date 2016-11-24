@@ -1,4 +1,4 @@
-package selenium.common;
+package selenium.webconfigure.context;
 
 /**
  * Environment.
