@@ -12,7 +12,7 @@ public class Environment {
     private static Environment _instance = null;
     private String appURL;
     private int elementTimeout;
-    private int pageTimeout;
+    private long pageTimeout;
     private int elementTimeoutInterval;
 
     /**
@@ -135,11 +135,11 @@ public class Environment {
      *
      * @return Page timeout
      */
-    public int getPageTimeout() {
+    public long getPageTimeout() {
         return pageTimeout;
     }
 
-    public void setPageTimeout(int pageTimeout) {
+    public void setPageTimeout(long pageTimeout) {
         this.pageTimeout = pageTimeout;
     }
 

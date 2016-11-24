@@ -42,7 +42,7 @@ public class ContextConfiguration {
         selenium.common.Environment environment = selenium.common.Environment.get();
         environment.setAppURL(env.getProperty("app.url"));
         environment.setElementTimeout(Integer.parseInt(env.getProperty("element.timeout")));
-        environment.setPageTimeout(Integer.parseInt(env.getProperty("page.timeout")));
+        environment.setPageTimeout(Long.parseLong(env.getProperty("page.timeout")));
         environment.setElementTimeoutInterval(Integer.parseInt(env.getProperty("element.timeout.interval")));
         environment.setZeroTimeout(Integer.parseInt(env.getProperty("zero.timeout")));
 

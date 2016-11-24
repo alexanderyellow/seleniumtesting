@@ -14,14 +14,37 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Configure working with the Browser
  */
 public class Browser {
 
+    public enum BrowserName {
+        CHROME("CHROME"),
+        IE("IE"),
+        FF("FF");
+
+        private final String browserName;
+
+        BrowserName(String value) {
+            browserName = value;
+        }
+
+        public static BrowserName fromString(String value) {
+            return valueOf(value.toUpperCase());
+        }
+
+        public String toString() {
+            return browserName;
+        }
+    }
+
     private final static List<WebDriver> drivers = new ArrayList<WebDriver>();
     private static RemoteWebDriver driver;
+
+    private static final long PAGE_LOAD_TIMEOUT = 10;
 
     static {
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -99,7 +122,12 @@ public class Browser {
                 break;
         }
 
+        setPageLoadTimeout(PAGE_LOAD_TIMEOUT);
         drivers.add(driver);
+    }
+
+    public void setPageLoadTimeout(long timeoutInMS) {
+        driver.manage().timeouts().pageLoadTimeout(timeoutInMS, TimeUnit.SECONDS);
     }
 
     public WebDriver getWebDriver() {
@@ -118,6 +146,10 @@ public class Browser {
     public void get(String url) {
         driver.navigate().to(url);
         //driver.get(url);
+    }
+
+    public void refresh() {
+        driver.navigate().refresh();
     }
 
     /**
@@ -156,19 +188,11 @@ public class Browser {
         }
     }
 
-    public String extractScreenShot(WebDriverException e) {
-        Throwable cause = e.getCause();
-        if (cause instanceof ScreenshotException) {
-            return ((ScreenshotException) cause).getBase64EncodedScreenshot();
-        }
-        return null;
-    }
-
     public String getPageSource() {
         try {
             return driver.getPageSource();
         } catch (Throwable t) {
-            return "Couldn't get page source:\n"; //+ TestUtils.getThrowableFullDescription(t);
+            return "Couldn't get page source:\n";
         }
     }
 
@@ -193,25 +217,5 @@ public class Browser {
         }
 
         return super.equals(o);
-    }
-
-    public enum BrowserName {
-        CHROME("CHROME"),
-        IE("IE"),
-        FF("FF");
-
-        private final String browserName;
-
-        BrowserName(String value) {
-            browserName = value;
-        }
-
-        public static BrowserName fromString(String value) {
-            return valueOf(value.toUpperCase());
-        }
-
-        public String toString() {
-            return browserName;
-        }
     }
 }

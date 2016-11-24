@@ -3,8 +3,10 @@ package tests;
 import org.testng.ITestContext;
 import org.testng.TestRunner;
 import org.testng.annotations.*;
+import selenium.common.Environment;
 import selenium.logger.DefaultListener;
 import selenium.logger.Logger;
+import selenium.ui.Element;
 import selenium.webconfigure.Browser;
 import selenium.webconfigure.context.ExecutionContext;
 import selenium.webconfigure.context.ExecutionContextManager;
@@ -29,16 +31,16 @@ public class AbstractTest {
         tr.addListener(DefaultListener.getInstance());
 
         /*Element.setElementTimeout(Environment.get().getElementTimeout());
-        Element.setElementTimeoutInterval(Environment.get().getElementTimeoutInterval());
-        Element.addAjaxLoadManager(new AjaxProcessingManager());*/
+        Element.setElementTimeoutInterval(Environment.get().getElementTimeoutInterval());*/
     }
 
     @BeforeTest
     public void beforeTest(ITestContext iTestContext) {
         ExecutionContext executionContext = ExecutionContextManager.get().createContext();
         browser = executionContext.getBrowser();
+        browser.setPageLoadTimeout(Environment.get().getPageTimeout());
         browser.maximize();
-        browser.get("http://www.google.com");
+        browser.get(Environment.get().getAppURL());
         logger = Logger.init(iTestContext.getName());
         logger.startTestSession(iTestContext.getName());
     }
