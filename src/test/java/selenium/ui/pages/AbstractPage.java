@@ -12,6 +12,7 @@ public abstract class AbstractPage {
 
     protected static long elementTimeout = 10;
     protected static int pageTimeout = 10;
+    protected static int intervalTimeout = 1;
     protected final WebDriver driver;
     protected final Browser browser;
 
@@ -28,5 +29,9 @@ public abstract class AbstractPage {
 
     public static void setPageTimeout(int timeout) {
         pageTimeout = timeout;
+    }
+
+    public static void setIntervalTimeout(int intervalTimeout) {
+        AbstractPage.intervalTimeout = intervalTimeout;
     }
 }

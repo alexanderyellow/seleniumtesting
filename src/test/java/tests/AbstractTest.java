@@ -31,6 +31,7 @@ public class AbstractTest {
         executionContext = ExecutionContextManager.get().createContext();
         AbstractPage.setElementTimeout(Environment.get().getElementTimeout());
         AbstractPage.setPageTimeout(Environment.get().getPageTimeout());
+        AbstractPage.setIntervalTimeout(Environment.get().getElementTimeoutInterval());
         /*Element.setElementTimeout(Environment.get().getElementTimeout());
         Element.setElementTimeoutInterval(Environment.get().getElementTimeoutInterval());*/
     }

@@ -44,7 +44,7 @@ public class MainPage extends HeaderComponentPage {
 
     public boolean isOpened() {
         Wait<WebElement> wait = new FluentWait<WebElement>(sectionTable)
-                .withTimeout(30, TimeUnit.SECONDS)
+                .withTimeout(elementTimeout, TimeUnit.SECONDS)
                 .pollingEvery(5, TimeUnit.SECONDS)
                 .ignoring(NoSuchElementException.class);
 
