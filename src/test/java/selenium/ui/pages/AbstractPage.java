@@ -12,9 +12,11 @@ public abstract class AbstractPage {
 
     protected static long elementTimeout = 10;
     protected static int pageTimeout = 10;
-    protected WebDriver driver;
+    protected final WebDriver driver;
+    protected final Browser browser;
 
     protected AbstractPage(Browser browser) {
+        this.browser = browser;
         this.driver = browser.getWebDriver();
         //initialize all elements and wait until they are presenting
         PageFactory.initElements(new AjaxElementLocatorFactory(driver, pageTimeout), this);

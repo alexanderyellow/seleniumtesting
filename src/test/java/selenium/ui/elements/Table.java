@@ -10,10 +10,14 @@ import java.util.List;
  */
 public class Table {
 
-    private WebElement table;
+    private final WebElement table;
+    private final WebElement row;
+    private final WebElement column;
 
-    public Table(WebElement table) {
+    public Table(WebElement table, WebElement row, WebElement column) {
         this.table = table;
+        this.row = row;
+        this.column = column;
     }
 
     private WebElement getRow() {
@@ -23,6 +27,7 @@ public class Table {
     }
 
     public WebElement getCell(int rowN, int columnN) {
+
         return null;
     }
 

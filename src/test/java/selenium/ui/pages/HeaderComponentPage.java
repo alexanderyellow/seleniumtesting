@@ -13,12 +13,12 @@ import selenium.webconfigure.Browser;
 /**
  * HeaderComponent common for all pages
  */
-public abstract class HeaderComponent extends AbstractPage {
+public abstract class HeaderComponentPage extends AbstractPage {
 
     @FindBy(css = "div#main_table > span.menu_lang > a")
     private WebElement languageLink;
 
-    public HeaderComponent(Browser browser) {
+    protected HeaderComponentPage(Browser browser) {
         super(browser);
     }
 
