@@ -1,10 +1,7 @@
 package selenium.ui.pages;
 
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import selenium.common.Language;
@@ -45,10 +42,10 @@ public abstract class HeaderComponentPage extends AbstractPage {
         return false;
     }
 
-    public SearchPage openSearchPage() {
+    public SearchingPage openSearchPage() {
 
 
-        return new SearchPage(browser);
+        return new SearchingPage(browser);
     }
 
 }
