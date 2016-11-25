@@ -59,10 +59,11 @@ public class MainPage extends HeaderComponentPage {
 
         switch (section) {
             case ELECTRONIC:
+                electronicCell.click();
+                break;
         }
 
         return new ElectronicsPage(browser);
     }
-
 
 }
