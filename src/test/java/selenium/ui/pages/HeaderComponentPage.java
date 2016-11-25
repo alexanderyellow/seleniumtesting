@@ -18,12 +18,14 @@ public abstract class HeaderComponentPage extends AbstractPage {
     @FindBy(css = "div#main_table > span.menu_lang > a")
     private WebElement languageLink;
 
+    @FindBy(css = "div#main_table > span.page_header_menu a[title='Искать объявления']")
+    private WebElement searchLink;
+
     protected HeaderComponentPage(Browser browser) {
         super(browser);
     }
 
     public void changeLanguage(Language lang) {
-
         if (isLangMatch(lang)) {
             languageLink.click();
         }
@@ -41,6 +43,12 @@ public abstract class HeaderComponentPage extends AbstractPage {
         }
 
         return false;
+    }
+
+    public SearchPage openSearchPage() {
+
+
+        return new SearchPage(browser);
     }
 
 }

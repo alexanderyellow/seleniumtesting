@@ -10,4 +10,7 @@ public class ElectronicsPage extends HeaderComponentPage {
     protected ElectronicsPage(Browser browser) {
         super(browser);
     }
+
+
+
 }
