@@ -3,6 +3,9 @@ package tests;
 import common.constants.DataProviderKeys;
 import dataproviders.DemoDataProvider;
 import junit.framework.Assert;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 import org.testng.annotations.Test;
 import selenium.common.Language;
 import selenium.ui.pages.MainPage;
@@ -53,6 +56,8 @@ public class DemoTest extends AbstractTest {
 
         WebElement myDynamicElement = (new WebDriverWait(browser.getWebDriver(), 10))
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("myDynamicElement")));*/
+
+        //Wait<WebDriver> wait = new FluentWait<WebDriver>();
 
         MainPage headerComponent = new MainPage(browser);
         headerComponent.changeLanguage(newLang);

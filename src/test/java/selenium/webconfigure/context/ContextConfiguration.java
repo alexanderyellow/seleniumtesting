@@ -42,9 +42,8 @@ public class ContextConfiguration {
         selenium.webconfigure.context.Environment environment = selenium.webconfigure.context.Environment.get();
         environment.setAppURL(env.getProperty("app.url"));
         environment.setElementTimeout(Integer.parseInt(env.getProperty("element.timeout")));
-        environment.setPageTimeout(Long.parseLong(env.getProperty("page.timeout")));
+        environment.setPageTimeout(Integer.parseInt(env.getProperty("page.timeout")));
         environment.setElementTimeoutInterval(Integer.parseInt(env.getProperty("element.timeout.interval")));
-        environment.setZeroTimeout(Integer.parseInt(env.getProperty("zero.timeout")));
 
     //    Browser browser = new Browser(browserConfig);
     //    System.out.println("Browser = " + browser);

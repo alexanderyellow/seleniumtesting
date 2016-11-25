@@ -1,55 +1,23 @@
 package selenium.webconfigure.context;
 
 /**
- * Environment.
+ * Environment
  */
 public class Environment {
 
-    private static int zeroTimeout;
     /**
      * Current active instance of Environment
      */
     private static Environment _instance = null;
     private String appURL;
     private int elementTimeout;
-    private long pageTimeout;
+    private int pageTimeout;
     private int elementTimeoutInterval;
 
     /**
      * Constructor
      */
-    private Environment() {
-
-        /*String sElementTimeout = System.getProperty("element.timeout");
-        if (sElementTimeout == null || sElementTimeout.equals(""))
-            elementTimeout = 10;
-        else
-            elementTimeout = Integer.valueOf(System.getProperty("element.timeout"));
-
-        String sPageTimeout = System.getProperty("page.timeout");
-        if (sPageTimeout == null || sPageTimeout.equals(""))
-            pageTimeout = 10;
-        else
-            pageTimeout = Integer.valueOf(System.getProperty("page.timeout"));
-
-        String sElementTimeoutInterval = System.getProperty("element.timeout.interval");
-        if (sElementTimeoutInterval == null || sElementTimeoutInterval.equals(""))
-            elementTimeoutInterval = 10;
-        else
-            elementTimeoutInterval = Integer.valueOf(System.getProperty("element.timeout.interval"));
-
-        String sZeroTimeout = System.getProperty("timeout.zero");
-        if (sZeroTimeout == null || sZeroTimeout.equals(""))
-            zeroTimeout = 10;
-        else
-            zeroTimeout = Integer.valueOf(System.getProperty("timeout.zero"));
-
-        appURL = System.getProperty("app.url");
-
-        if (appURL == null || appURL.equals("")) {
-            throw new RuntimeException("App URL is not defined. Should be provided with system property app.url");
-        }*/
-    }
+    private Environment() {}
 
     /**
      * Get current active instance. #init(String) should be called before at least once
@@ -62,19 +30,6 @@ public class Environment {
         }
 
         return _instance;
-    }
-
-    /**
-     * Provides zero timeout
-     *
-     * @return Element timeout
-     */
-    public static int getZeroTimeout() {
-        return zeroTimeout;
-    }
-
-    public static void setZeroTimeout(int zeroTimeout) {
-        Environment.zeroTimeout = zeroTimeout;
     }
 
     /**
@@ -135,11 +90,11 @@ public class Environment {
      *
      * @return Page timeout
      */
-    public long getPageTimeout() {
+    public int getPageTimeout() {
         return pageTimeout;
     }
 
-    public void setPageTimeout(long pageTimeout) {
+    public void setPageTimeout(int pageTimeout) {
         this.pageTimeout = pageTimeout;
     }
 

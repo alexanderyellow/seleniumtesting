@@ -5,6 +5,7 @@ import org.testng.TestRunner;
 import org.testng.annotations.*;
 import selenium.logger.DefaultListener;
 import selenium.logger.Logger;
+import selenium.ui.pages.AbstractPage;
 import selenium.webconfigure.Browser;
 import selenium.webconfigure.context.Environment;
 import selenium.webconfigure.context.ExecutionContext;
@@ -19,6 +20,7 @@ public class AbstractTest {
 
     protected Browser browser;
     protected Logger logger;
+    private ExecutionContext executionContext;
 
     @BeforeSuite
     public void beforeSuite(ITestContext iTestContext) {
@@ -26,13 +28,15 @@ public class AbstractTest {
         TestRunner tr = (TestRunner) iTestContext;
         tr.addListener(DefaultListener.getInstance());
 
+        executionContext = ExecutionContextManager.get().createContext();
+        AbstractPage.setElementTimeout(Environment.get().getElementTimeout());
+        AbstractPage.setPageTimeout(Environment.get().getPageTimeout());
         /*Element.setElementTimeout(Environment.get().getElementTimeout());
         Element.setElementTimeoutInterval(Environment.get().getElementTimeoutInterval());*/
     }
 
     @BeforeTest
     public void beforeTest(ITestContext iTestContext) {
-        ExecutionContext executionContext = ExecutionContextManager.get().createContext();
         browser = executionContext.getBrowser();
         browser.setPageLoadTimeout(Environment.get().getPageTimeout());
         browser.maximize();
