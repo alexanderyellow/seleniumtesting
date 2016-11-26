@@ -1,4 +1,4 @@
-package selenium.common;
+package common.constants;
 
 /**
  * Language enum contains the HeaderComponent languages

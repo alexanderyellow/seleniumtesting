@@ -24,7 +24,6 @@ public class AbstractTest {
 
     @BeforeSuite
     public void beforeSuite(ITestContext iTestContext) {
-
         TestRunner tr = (TestRunner) iTestContext;
         tr.addListener(DefaultListener.getInstance());
 
@@ -32,8 +31,6 @@ public class AbstractTest {
         AbstractPage.setElementTimeout(Environment.get().getElementTimeout());
         AbstractPage.setPageTimeout(Environment.get().getPageTimeout());
         AbstractPage.setIntervalTimeout(Environment.get().getElementTimeoutInterval());
-        /*Element.setElementTimeout(Environment.get().getElementTimeout());
-        Element.setElementTimeoutInterval(Environment.get().getElementTimeoutInterval());*/
     }
 
     @BeforeTest

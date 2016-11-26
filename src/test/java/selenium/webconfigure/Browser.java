@@ -8,7 +8,7 @@ import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.remote.ScreenshotException;
+import org.openqa.selenium.safari.SafariDriver;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,30 +21,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class Browser {
 
-    public enum BrowserName {
-        CHROME("CHROME"),
-        IE("IE"),
-        FF("FF");
-
-        private final String browserName;
-
-        BrowserName(String value) {
-            browserName = value;
-        }
-
-        public static BrowserName fromString(String value) {
-            return valueOf(value.toUpperCase());
-        }
-
-        public String toString() {
-            return browserName;
-        }
-    }
-
     private final static List<WebDriver> drivers = new ArrayList<WebDriver>();
-    private static RemoteWebDriver driver;
-
     private static final long PAGE_LOAD_TIMEOUT = 10;
+    private static RemoteWebDriver driver;
 
     static {
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -64,7 +43,6 @@ public class Browser {
 
     private final String id;
     private BrowserConfig browserConfig;
-
     public Browser(BrowserConfig browserConfig) {
         this.id = UUID.randomUUID() + "";
         this.browserConfig = browserConfig;
@@ -95,6 +73,12 @@ public class Browser {
             case IE:
                 //TODO add
                 break;
+            case SAFARI:
+                capabilities = DesiredCapabilities.safari();
+                capabilities.setJavascriptEnabled(browserConfig.getJavascriptEnabled());
+                capabilities.setPlatform(browserConfig.getPlatform());
+                capabilities.setBrowserName(browserConfig.getBrowserName().toString());
+                driver = new SafariDriver();
             case FF:
                 //it's necessary
                 System.setProperty("webdriver.firefox.marionette","src\\test\\resources\\drivers");
@@ -217,5 +201,26 @@ public class Browser {
         }
 
         return super.equals(o);
+    }
+
+    public enum BrowserName {
+        CHROME("CHROME"),
+        IE("IE"),
+        SAFARI("SAFARI"),
+        FF("FF");
+
+        private final String browserName;
+
+        BrowserName(String value) {
+            browserName = value;
+        }
+
+        public static BrowserName fromString(String value) {
+            return valueOf(value.toUpperCase());
+        }
+
+        public String toString() {
+            return browserName;
+        }
     }
 }

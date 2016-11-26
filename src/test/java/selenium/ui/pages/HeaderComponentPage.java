@@ -1,10 +1,8 @@
 package selenium.ui.pages;
 
+import common.constants.Language;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import selenium.common.Language;
 import selenium.webconfigure.Browser;
 
 /**
@@ -29,8 +27,7 @@ public abstract class HeaderComponentPage extends AbstractPage {
     }
 
     public boolean isLangMatch(Language lang) {
-        (new WebDriverWait(driver, elementTimeout))
-                .until(ExpectedConditions.elementToBeClickable(languageLink));
+        super.waitElementToBeClickable(languageLink);
 
         String expectedLang = lang.toString();
         String actualLang = languageLink.getText();
@@ -42,8 +39,9 @@ public abstract class HeaderComponentPage extends AbstractPage {
         return false;
     }
 
-    public SearchingPage openSearchPage() {
-
+    public SearchingPage openSearchingPage() {
+        super.waitElementToBeClickable(searchLink);
+        searchLink.click();
 
         return new SearchingPage(browser);
     }

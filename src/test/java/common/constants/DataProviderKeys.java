@@ -5,4 +5,5 @@ package common.constants;
  */
 public interface DataProviderKeys {
     String GET_LANGUAGE = "getLanguage";
+    String GET_SEARCHING_ELECTRONIC = "getSearchingElectronic";
 }
