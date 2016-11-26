@@ -13,8 +13,11 @@ public abstract class HeaderComponentPage extends AbstractPage {
     @FindBy(css = "div#main_table > span.menu_lang > a")
     private WebElement languageLink;
 
-    @FindBy(css = "div#main_table > span.page_header_menu a[title='Искать объявления']")
+    @FindBy(css = "div#main_table > span.page_header_menu a[href$='/search/']")
     private WebElement searchLink;
+
+    @FindBy(css = "div#main_table > span.page_header_menu a[href$='/favorites/']")
+    private WebElement favoritesLink;
 
     protected HeaderComponentPage(Browser browser) {
         super(browser);
@@ -44,6 +47,13 @@ public abstract class HeaderComponentPage extends AbstractPage {
         searchLink.click();
 
         return new SearchingPage(browser);
+    }
+
+    public FavoritesPage openFavoritesPage() {
+        super.waitElementToBeClickable(favoritesLink);
+        favoritesLink.click();
+
+        return new FavoritesPage(browser);
     }
 
 }

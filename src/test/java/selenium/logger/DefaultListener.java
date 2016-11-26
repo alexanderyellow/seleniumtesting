@@ -26,17 +26,34 @@ public class DefaultListener implements ITestListener {
     public void onTestSuccess(ITestResult iTestResult) {
         ExecutionContext executionContext = ExecutionContextManager.get().getExecutionContext();
         String screenshot = executionContext.getBrowser().getScreenshot();
-        Logger.get().success("Test method: " + iTestResult.getMethod().getMethodName() + " passed", screenshot);
+
+        Logger.get().success("Test method '" + iTestResult.getMethod().getMethodName() + "' passed:", screenshot);
     }
 
     public void onTestFailure(ITestResult iTestResult) {
         ExecutionContext executionContext = ExecutionContextManager.get().getExecutionContext();
         String screenshot = executionContext.getBrowser().getScreenshot();
-        Logger.get().fail("Test method: " + iTestResult.getMethod().getMethodName() + " failed", screenshot);
+
+        synchronized ("synch") {
+            Logger.get().fail("Test method '" + iTestResult.getMethod().getMethodName() + "' failed:", screenshot);
+        }
+
+        synchronized ("synch") {
+            iTestResult.getThrowable().printStackTrace();
+        }
     }
 
     public void onTestSkipped(ITestResult iTestResult) {
-        System.out.println("--------onTestSkipped");
+        ExecutionContext executionContext = ExecutionContextManager.get().getExecutionContext();
+        String screenshot = executionContext.getBrowser().getScreenshot();
+
+        synchronized ("synch") {
+            Logger.get().fail("Test method '" + iTestResult.getMethod().getMethodName() + "' skipped:", screenshot);
+        }
+
+        synchronized ("synch") {
+            iTestResult.getThrowable().printStackTrace();
+        }
     }
 
     public void onTestFailedButWithinSuccessPercentage(ITestResult iTestResult) {

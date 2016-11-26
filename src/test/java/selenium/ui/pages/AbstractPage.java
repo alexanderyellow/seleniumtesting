@@ -1,17 +1,18 @@
 package selenium.ui.pages;
 
 import com.google.common.base.Function;
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.FluentWait;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.*;
+import selenium.logger.Logger;
 import selenium.webconfigure.Browser;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -62,6 +63,11 @@ public abstract class AbstractPage {
                 .until(ExpectedConditions.elementToBeClickable(element));
     }
 
+    protected void waitElementToBeVisible(WebElement element) {
+        (new WebDriverWait(driver, elementTimeout))
+                .until(ExpectedConditions.visibilityOf(element));
+    }
+
     protected boolean waitElementToBeEnabled(final WebElement element) {
         Wait<WebElement> wait = new FluentWait<WebElement>(element)
                 .withTimeout(elementTimeout, TimeUnit.SECONDS)
@@ -73,6 +79,55 @@ public abstract class AbstractPage {
                 return element.isEnabled();
             }
         });
+    }
+
+    protected void selectByIndex(Select select, String option) {
+
+        if (!"".equals(option) && option != null) {
+            List<WebElement> options = select.getOptions();
+
+            String actualOption = "";
+            int index = 0;
+
+            Iterator<WebElement> iterator = options.iterator();
+
+            while (iterator.hasNext()) {
+                actualOption = iterator.next().getText();
+
+                if (option.equals(actualOption)) {
+                    select.selectByIndex(index);
+                    return;
+                } else {
+                    index++;
+                }
+            }
+
+            Logger.get().error("There is no such option '" + option + "'!");
+        }
+    }
+
+    protected boolean isUrlEnding(final String urlPart) {
+        String currentUrl = driver.getCurrentUrl();
+
+        Wait<String> wait = new FluentWait<String>(currentUrl)
+                .withTimeout(elementTimeout, TimeUnit.SECONDS)
+                .pollingEvery(intervalTimeout, TimeUnit.SECONDS);
+
+        return wait.until(new Function<String, Boolean>() {
+            public Boolean apply(String url) {
+                return url.contains(urlPart);
+            }
+        });
+    }
+
+    protected WebElement getTableCell(WebElement table, int rowN, int columnN) {
+        List<WebElement> rows = table.findElements(By.cssSelector("tr"));
+        WebElement row = rows.get(rowN);
+
+        List<WebElement> columns = row.findElements(By.cssSelector("td"));
+        WebElement column = columns.get(columnN);
+
+        return column;
     }
 
 }

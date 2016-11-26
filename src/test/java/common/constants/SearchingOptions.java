@@ -25,4 +25,8 @@ public class SearchingOptions {
         public final static String PRICE = "Цена";
     }
 
+    public class TransactionType {
+        public final static String SELLING = "Продажа";
+    }
+
 }
