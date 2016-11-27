@@ -4,7 +4,7 @@ import org.openqa.selenium.Platform;
 import selenium.webconfigure.Browser.BrowserName;
 
 /**
- * Created by alexander.
+ * BrowserConfig
  */
 public class BrowserConfig {
 

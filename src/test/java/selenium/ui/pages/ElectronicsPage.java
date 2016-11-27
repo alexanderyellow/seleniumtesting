@@ -13,13 +13,11 @@ public class ElectronicsPage extends HeaderComponentPage {
     private WebElement electronicLink;
 
     protected ElectronicsPage(Browser browser) {
-        super(browser);
+        super(browser, "Electronics");
     }
 
     public boolean isOpened() {
         return super.isOpened(electronicLink);
     }
-
-
 
 }

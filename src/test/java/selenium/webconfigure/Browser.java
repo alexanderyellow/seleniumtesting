@@ -91,7 +91,6 @@ public class Browser {
 
                 break;
             default:
-
                 //TODO rework duplicate code
                 capabilities = DesiredCapabilities.chrome();
                 capabilities.setJavascriptEnabled(browserConfig.getJavascriptEnabled());
@@ -110,8 +109,8 @@ public class Browser {
         drivers.add(driver);
     }
 
-    public void setPageLoadTimeout(long timeoutInMS) {
-        driver.manage().timeouts().pageLoadTimeout(timeoutInMS, TimeUnit.SECONDS);
+    public void setPageLoadTimeout(long timeoutInS) {
+        driver.manage().timeouts().pageLoadTimeout(timeoutInS, TimeUnit.SECONDS);
     }
 
     public WebDriver getWebDriver() {
@@ -223,4 +222,5 @@ public class Browser {
             return browserName;
         }
     }
+
 }

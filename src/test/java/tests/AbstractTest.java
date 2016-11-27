@@ -58,7 +58,6 @@ public class AbstractTest {
 
     @AfterMethod
     public void afterMethod(ITestContext iTestContext, Method method) {
-        //logger.endTestMethod(method.getName());
     }
 
 }

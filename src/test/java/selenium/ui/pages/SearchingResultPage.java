@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
+import selenium.logger.Logger;
 import selenium.webconfigure.Browser;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class SearchingResultPage extends HeaderComponentPage {
     private Select transactionTypeSelect;
 
     @FindBy(css = "a.a19")
-    private WebElement costLink;
+    private WebElement priceLink;
 
     @FindBy(css = "td.td7 > a.a9a[href*='/search/']")
     private WebElement advancedSearchLink;
@@ -38,30 +39,32 @@ public class SearchingResultPage extends HeaderComponentPage {
     @FindBy(css = "a#alert_ok")
     private WebElement okAlertLink;
 
-    private List<String> goodsText;
+    private List<String> goodsLink;
 
     public SearchingResultPage(Browser browser) {
-        super(browser);
+        super(browser, "Searching result");
 
         transactionTypeSelect = new Select(transactionTypeElement);
-        goodsText = new ArrayList<String>();
+        goodsLink = new ArrayList<String>();
     }
 
     public boolean isOpened() {
-        return super.isUrlEnding(URL_PART);
+        return super.isOpened(URL_PART);
     }
 
     public SearchingResultPage sortBy(String transactionType) {
+        Logger.get().debug("Sorting results by transport type and price.");
         super.selectByIndex(transactionTypeSelect, transactionType);
-        super.waitElementToBeClickable(costLink);
-        costLink.click();
+        super.waitElementToBeClickable(priceLink);
+        priceLink.click();
 
         return this;
     }
 
     public SearchingResultPage sortByPrice() {
-        super.waitElementToBeClickable(costLink);
-        costLink.click();
+        Logger.get().debug("Sorting results price.");
+        super.waitElementToBeClickable(priceLink);
+        priceLink.click();
 
         return this;
     }
@@ -77,17 +80,18 @@ public class SearchingResultPage extends HeaderComponentPage {
      * Add random goods
      */
     public SearchingResultPage addIntoBookmarks(int goodsCount) {
+        Logger.get().debug("Adding goods into the bookmarks.");
         super.waitElementToBeEnabled(mainTable);
 
         WebElement checkbox;
-        WebElement description;
+        WebElement links;
 
         for (int i = 1; i < goodsCount + 1; i++) {
             checkbox = super.getTableCell(mainTable, i, 0).findElement(By.cssSelector("input[type='checkbox']"));
-            description = super.getTableCell(mainTable, i, 2).findElement(By.cssSelector("div.d1 > a"));
+            links = super.getTableCell(mainTable, i, 1).findElement(By.cssSelector("a > img"));
 
             if (!checkbox.isSelected()) {
-                goodsText.add(description.getText());
+                goodsLink.add(links.getAttribute("src"));
                 checkbox.click();
             }
         }
@@ -101,8 +105,8 @@ public class SearchingResultPage extends HeaderComponentPage {
         return this;
     }
 
-    public List<String> getGoodsDescription() {
-        return goodsText;
+    public List<String> getGoodsLik() {
+        return goodsLink;
     }
 
 }

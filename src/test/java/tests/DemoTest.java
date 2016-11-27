@@ -7,6 +7,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import selenium.ui.pages.*;
 import selenium.ui.pages.MainPage.Sections;
+import services.MainService;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class DemoTest extends AbstractTest {
         Assert.assertTrue(mainPage.isOpened(), "Main page isn't opened!");
 
         mainPage.changeLanguage(newLang);
+        Assert.assertTrue(mainPage.isLangMatch(oldLang), "Language isn't changed!");
     }
 
     @Test(description = "Work with electronic section", dependsOnMethods = "changeLanguageTest",
@@ -31,7 +33,7 @@ public class DemoTest extends AbstractTest {
         MainPage mainPage = new MainPage(browser);
         Assert.assertTrue(mainPage.isOpened(), "Main page isn't opened!");
 
-        ElectronicsPage electronicsPage = mainPage.chooseElectronicSection(Sections.ELECTRONIC);
+        ElectronicsPage electronicsPage = mainPage.chooseSection(Sections.ELECTRONIC);
         Assert.assertTrue(electronicsPage.isOpened(), "Electronics page isn't opened!");
 
         SearchingPage searchingPage = electronicsPage.openSearchingPage();
@@ -74,19 +76,14 @@ public class DemoTest extends AbstractTest {
         Assert.assertTrue(searchingResultPage.isOpened(), "Searching result page isn't opened!");
 
         searchingResultPage = searchingResultPage.addIntoBookmarks(goodsCount);
-        List<String> goodsDescriptionExp = searchingResultPage.getGoodsDescription();
+        List<String> goodsLinkExp = searchingResultPage.getGoodsLik();
 
         FavoritesPage favoritesPage = searchingResultPage.openFavoritesPage();
         Assert.assertTrue(favoritesPage.isOpened(), "Favorites page isn't opened!");
 
-        List<String> goodsDescriptionAct = favoritesPage.getGoodsDescription();
+        List<String> goodsLinkAct = favoritesPage.getGoodsDescription();
 
-        compareLists(goodsDescriptionAct, goodsDescriptionExp);
-    }
-
-    private void compareLists(List<String> listAct, List<String> listExp) {
-        Assert.assertEquals(listAct.size(), listExp.size(), "Lists size don't match!");
-        Assert.assertTrue(listAct.containsAll(listExp), "Goods don't match!");
+        MainService.compareTwoLists(goodsLinkAct, goodsLinkExp);
     }
 
 }

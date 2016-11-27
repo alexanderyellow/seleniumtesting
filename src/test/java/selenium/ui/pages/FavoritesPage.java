@@ -15,26 +15,26 @@ public class FavoritesPage extends HeaderComponentPage {
 
     private final static String URL_PART = "favorites/";
 
-    @FindBys({@FindBy(css = "a.am")})
-    private List<WebElement> goodsDescriptionLink;
+    @FindBys({@FindBy(css = "img.isfoto")})
+    private List<WebElement> goodsLink;
 
     public FavoritesPage(Browser browser) {
-        super(browser);
+        super(browser, "Favorites");
     }
 
     public boolean isOpened() {
-        return super.isUrlEnding(URL_PART);
+        return super.isOpened(URL_PART);
     }
 
     public List<String> getGoodsDescription() {
-        List<String> goodsDescription = new ArrayList<String>();
-        int size = goodsDescriptionLink.size();
+        List<String> goodsImgLink = new ArrayList<String>();
+        int size = goodsLink.size();
 
         for (int i = 0; i < size; i++) {
-            goodsDescription.add(goodsDescriptionLink.get(i).getText());
+            goodsImgLink.add(goodsLink.get(i).getAttribute("src"));
         }
 
-        return goodsDescription;
+        return goodsImgLink;
     }
 
 }

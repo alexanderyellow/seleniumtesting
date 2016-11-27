@@ -3,6 +3,7 @@ package selenium.ui.pages;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
+import selenium.logger.Logger;
 import selenium.webconfigure.Browser;
 
 /**
@@ -41,7 +42,7 @@ public class SearchingPage extends HeaderComponentPage {
     private WebElement searchingButton;
 
     protected SearchingPage(Browser browser) {
-        super(browser);
+        super(browser, "Searching");
 
         subheadingSelect = new Select(subheadingElement);
         regionSelect = new Select(regionElement);
@@ -50,11 +51,12 @@ public class SearchingPage extends HeaderComponentPage {
     }
 
     public boolean isOpened() {
-        return super.isUrlEnding(URL_PART);
+        return super.isOpened(URL_PART);
     }
 
     public SearchingResultPage search(String searchingWord, String minPrice, String maxPrice, String subheading,
                                       String region, String period, String sortingValue) {
+        Logger.get().debug("Filling the searching form.");
         super.waitElementToBeClickable(searchingButton);
 
         if (searchingWord != null) {

@@ -25,10 +25,12 @@ public abstract class AbstractPage {
     protected static int intervalTimeout = 1;
     protected final WebDriver driver;
     protected final Browser browser;
+    private final String pageName;
 
-    protected AbstractPage(Browser browser) {
+    protected AbstractPage(Browser browser, String pageName) {
         this.browser = browser;
         this.driver = browser.getWebDriver();
+        this.pageName = pageName;
         //initialize all elements and wait until they are presenting
         PageFactory.initElements(new AjaxElementLocatorFactory(driver, pageTimeout), this);
     }
@@ -46,6 +48,8 @@ public abstract class AbstractPage {
     }
 
     protected boolean isOpened(final WebElement element) {
+        logOpeningPage();
+
         Wait<WebElement> wait = new FluentWait<WebElement>(element)
                 .withTimeout(elementTimeout, TimeUnit.SECONDS)
                 .pollingEvery(intervalTimeout, TimeUnit.SECONDS)
@@ -56,6 +60,15 @@ public abstract class AbstractPage {
                 return element.isDisplayed();
             }
         });
+    }
+
+    protected boolean isOpened(final String urlPart) {
+        logOpeningPage();
+        return isUrlEnding(urlPart);
+    }
+
+    private void logOpeningPage() {
+        Logger.get().debug(pageName + " page is opening.");
     }
 
     protected void waitElementToBeClickable(WebElement element) {

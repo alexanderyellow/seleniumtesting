@@ -3,6 +3,7 @@ package selenium.ui.pages;
 import common.constants.Language;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import selenium.logger.Logger;
 import selenium.webconfigure.Browser;
 
 /**
@@ -19,11 +20,12 @@ public abstract class HeaderComponentPage extends AbstractPage {
     @FindBy(css = "div#main_table > span.page_header_menu a[href$='/favorites/']")
     private WebElement favoritesLink;
 
-    protected HeaderComponentPage(Browser browser) {
-        super(browser);
+    protected HeaderComponentPage(Browser browser, String pageName) {
+        super(browser, pageName);
     }
 
     public void changeLanguage(Language lang) {
+        Logger.get().debug("Changing language.");
         if (isLangMatch(lang)) {
             languageLink.click();
         }

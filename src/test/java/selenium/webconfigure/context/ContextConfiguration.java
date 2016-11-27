@@ -45,14 +45,6 @@ public class ContextConfiguration {
         environment.setPageTimeout(Integer.parseInt(env.getProperty("page.timeout")));
         environment.setElementTimeoutInterval(Integer.parseInt(env.getProperty("element.timeout.interval")));
 
-    //    Browser browser = new Browser(browserConfig);
-    //    System.out.println("Browser = " + browser);
-
-
-    //    executionContext.setBrowser(browserConfig);
-    //    executionContext.setMethod(method);
-    //    executionContext.setThread(Thread.currentThread());
-
         return new BrowserConfig(webdriver, browserName, javascriptEnabled, platform);
     }
 

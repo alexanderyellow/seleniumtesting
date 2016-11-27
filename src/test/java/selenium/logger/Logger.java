@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Logger.
+ * Logger
  */
 public class Logger {
 
@@ -31,7 +31,7 @@ public class Logger {
     /**
      * Substring of screenshot in message
      */
-    private final String SCREEN_SHOT_ID = "[screenshot:";
+    private final String SCREEN_SHOT_ID = "[screenshot: ";
     /**
      * Path to folder with screenshot images
      */
@@ -48,13 +48,14 @@ public class Logger {
         //Order is important
         LoggerContext loggerContext = (LoggerContext) LogManager.getContext(true);
         Configuration configuration = loggerContext.getConfiguration();
-        PatternLayout patternLayout = PatternLayout.createDefaultLayout(configuration);
+        PatternLayout patternLayout = PatternLayout.createLayout("%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n",
+                null, configuration, null, null, true, false, null, null);
         ConsoleAppender consoleAppender = ConsoleAppender.createDefaultAppenderForLayout(patternLayout);
         consoleAppender.start();
         configuration.addAppender(consoleAppender);
 
         //LoggerConfig name and Logger name must match
-        LoggerConfig consoleLoggerConfig = new LoggerConfig(loggerName, Level.INFO, false);
+        LoggerConfig consoleLoggerConfig = new LoggerConfig(loggerName, Level.DEBUG, false);
         consoleLoggerConfig.addAppender(consoleAppender, null, null);
 
         configuration.addLogger(loggerName, consoleLoggerConfig);
@@ -101,7 +102,7 @@ public class Logger {
     }
 
     public void startTestMethod(String methodName) {
-        consoleLogger.info("Start test method: " + methodName);
+        consoleLogger.info("********** Start test method: " + methodName + " **********");
     }
 
     public void info(String message) {
@@ -118,6 +119,10 @@ public class Logger {
 
     public void fail(String message, String screenShotBase64) {
         consoleLogger.error(message + " " + processScreenShot(screenShotBase64));
+    }
+
+    public void fail(String message) {
+        consoleLogger.error(message);
     }
 
     public void success(String message, String screenShotBase64) {
@@ -145,7 +150,7 @@ public class Logger {
             logScreenshot.createNewFile();
             stream = new FileOutputStream(logScreenshot);
             new Base64Encoder().decode(screenShotBase64, stream);
-            return SCREEN_SHOT_ID + new File(LOG_IMG_FOLDER).getName() + "/" + logScreenshot.getName() + "]";
+            return SCREEN_SHOT_ID + LOG_IMG_FOLDER + logScreenshot.getName() + "]";
         } catch (IOException e) {
             throw new WebDriverException(e);
         } finally {
