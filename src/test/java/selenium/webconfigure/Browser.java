@@ -68,7 +68,6 @@ public class Browser {
                         .usingDriverExecutable(new File(browserConfig.getWebDriver()))
                         .usingAnyFreePort()
                         .build(), capabilities);
-
                 break;
             case IE:
                 //TODO add
@@ -88,7 +87,6 @@ public class Browser {
                 capabilities.setBrowserName(browserConfig.getBrowserName().toString());
 
                 driver = new FirefoxDriver(capabilities);
-
                 break;
             default:
                 //TODO rework duplicate code
@@ -101,7 +99,6 @@ public class Browser {
                         .usingDriverExecutable(new File(browserConfig.getWebDriver()))
                         .usingAnyFreePort()
                         .build(), capabilities);
-
                 break;
         }
 

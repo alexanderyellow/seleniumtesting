@@ -19,7 +19,6 @@ public class ExecutionContextManager {
     public static ExecutionContextManager get() {
         if (_instance == null) {
             _instance = new ExecutionContextManager();
-            return _instance;
         }
 
         return _instance;
