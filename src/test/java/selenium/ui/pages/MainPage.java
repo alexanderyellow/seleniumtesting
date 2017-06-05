@@ -1,5 +1,6 @@
 package selenium.ui.pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import selenium.logger.Logger;
@@ -21,6 +22,7 @@ public class MainPage extends HeaderComponentPage {
         return super.isOpened(sectionTable);
     }
 
+    @Step("lalala")
     public ElectronicsPage chooseSection(Sections section) {
         Logger.get().debug("Choosing section.");
         switch (section) {
